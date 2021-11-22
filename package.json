@@ -1,0 +1,42 @@
+{
+  "name": "f2e_taiwan_tutorial",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.5.0",
+    "@emotion/styled": "^11.3.0",
+    "@mui/icons-material": "^5.1.0",
+    "@mui/material": "^5.0.6",
+    "@mui/styled-engine-sc": "^5.0.4",
+    "@react-google-maps/api": "^2.7.0",
+    "axios": "^0.24.0",
+    "embla-carousel-react": "^6.0.1",
+    "gsap": "^3.8.0",
+    "jssha": "^3.2.0",
+    "next": "12.0.3",
+    "react": "17.0.2",
+    "react-dom": "17.0.2",
+    "react-hook-form": "^7.19.5",
+    "styled-components": "^5.3.3",
+    "swr": "^1.0.1"
+  },
+  "devDependencies": {
+    "@svgr/webpack": "^5.5.0",
+    "@types/node": "^16.11.7",
+    "@types/react": "17.0.34",
+    "@types/styled-components": "^5.1.15",
+    "babel-plugin-inline-react-svg": "^2.0.1",
+    "babel-plugin-styled-components": "^1.13.3",
+    "eslint": "7",
+    "eslint-config-next": "12.0.3",
+    "typescript": "4.4.4"
+  },
+  "resolutions": {
+    "styled-components": "^5"
+  }
+}
