@@ -1,5 +1,6 @@
 import { createTheme } from "@mui/material/styles";
 import { outlinedInputClasses } from "@mui/material/OutlinedInput";
+import { switchClasses } from "@mui/material/Switch";
 
 const colorSet = {
   primary: "#5A637E",
@@ -88,6 +89,61 @@ export const mainTheme = createTheme({
         },
         notchedOutline: {
           borderColor: "transparent",
+        },
+      },
+    },
+
+    MuiSwitch: {
+      styleOverrides: {
+        root: {
+          width: 44,
+          height: 20,
+          padding: 0,
+          [`& .${switchClasses.switchBase}`]: {
+            padding: 0,
+            margin: 2,
+            transitionDuration: "300ms",
+            [`&.${switchClasses.checked}`]: {
+              transform: "translateX(24px)",
+              color: "#fff",
+              [`& + .${switchClasses.track}`]: {
+                opacity: 1,
+                border: 0,
+              },
+              [`&.${switchClasses.disabled} + .${switchClasses.track}`]: {
+                opacity: 0.5,
+              },
+            },
+            [`&.Mui-focusVisible + .${switchClasses.thumb}`]: {
+              // color: theme.palette.secondary.main,
+              border: "6px solid #fff",
+            },
+            [`&.Mui-disabled + .${switchClasses.thumb}`]: {
+              // color:
+              //   theme.palette.mode === "light"
+              //     ? theme.palette.grey[100]
+              //     : theme.palette.grey[600],
+            },
+            [`&.Mui-disabled + .${switchClasses.track}`]: {
+              // opacity: theme.palette.mode === "light" ? 0.7 : 0.3,
+            },
+          },
+          [`& .${switchClasses.thumb}`]: {
+            boxSizing: "border-box",
+            width: 16,
+            height: 16,
+            boxShadow: "1px 0px 1px rgba(0, 0, 0, 0.25)",
+          },
+          [`& .${switchClasses.track}`]: {
+            borderRadius: 100,
+            // backgroundColor: theme.palette.mode === "light" ? "#E9E9EA" : "#39393D",
+
+            backgroundColor: "#D8DAE0",
+            opacity: 1,
+            // transition: theme.transitions.create(["background-color"], {
+            duration: 500,
+            boxShadow: "inset 0px 1px 2px rgba(0, 0, 0, 0.25)",
+          },
         },
       },
     },
