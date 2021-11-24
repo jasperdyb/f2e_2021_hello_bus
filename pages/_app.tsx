@@ -15,6 +15,7 @@ import {
 } from "@mui/material/styles";
 import { SceneSpotContextProvider } from "context/sceneSpot";
 import { GeolocationContextProvider } from "context/geolocation";
+import { mainTheme } from "public/theme/main";
 
 const GlobalStyle = createGlobalStyle`
 html{ 
@@ -32,67 +33,6 @@ type NextPageWithLayout = NextPage & {
 type AppPropsWithLayout = AppProps & {
   Component: NextPageWithLayout;
 };
-
-const mainTheme = createTheme({
-  palette: {
-    primary: {
-      main: "#E1AB43",
-      contrastText: "#FFF",
-    },
-    secondary: {
-      main: "#A3C896",
-    },
-    info: {
-      main: "#FFF",
-      contrastText: "#000",
-    },
-  },
-
-  shape: {
-    borderRadius: 15,
-  },
-
-  typography: {
-    // fontFamily:font-family: PingFangTC-Regular, sans-serif,
-    fontFamily: [
-      // "'Crimson Pro'",
-      "PingFang TC",
-      "'Noto Sans TC'",
-      "Roboto",
-      "sans-serif",
-    ].join(","),
-    fontSize: 14,
-
-    h1: {
-      fontSize: "24px",
-    },
-    h2: {
-      fontSize: "18px",
-    },
-    h3: {
-      fontSize: "16px",
-    },
-    subtitle1: {
-      fontSize: "14px",
-    },
-    subtitle2: {
-      fontSize: "12px",
-    },
-    body1: {
-      fontSize: "16px",
-    },
-  },
-
-  components: {
-    MuiButton: {
-      styleOverrides: {
-        containedPrimary: {
-          color: "#FFF",
-        },
-      },
-    },
-  },
-});
 
 function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   const getLayout = Component.getLayout ?? ((page) => page);
