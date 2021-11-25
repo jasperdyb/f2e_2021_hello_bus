@@ -1,6 +1,8 @@
-import { createTheme } from "@mui/material/styles";
+import { styled, createTheme } from "@mui/material/styles";
 import { outlinedInputClasses } from "@mui/material/OutlinedInput";
 import { switchClasses } from "@mui/material/Switch";
+import { stepConnectorClasses } from "@mui/material/StepConnector";
+import { stepLabelClasses } from "@mui/material/StepLabel";
 
 const colorSet = {
   primary: "#5A637E",
@@ -42,13 +44,13 @@ export const mainTheme = createTheme({
       styleOverrides: {
         containedPrimary: {
           // color: "black",
-          borderRadius: 100,
+          borderRadius: 10,
           ":disabled": {
             color: "white",
           },
         },
         outlinedPrimary: {
-          borderRadius: 100,
+          borderRadius: 10,
         },
       },
     },
@@ -66,15 +68,30 @@ export const mainTheme = createTheme({
           borderWidth: 0,
           [":hover"]: {
             boxShadow: "0px 0px 0px 3px rgba(121, 142, 200, 0.49)",
+            [`&.${outlinedInputClasses.disabled}`]: {
+              boxShadow: "none",
+            },
+            [`& .${outlinedInputClasses.notchedOutline}`]: {
+              border: "1px solid #8B94B3",
+            },
           },
-          [`:hover.${outlinedInputClasses.disabled}`]: {
-            boxShadow: "none",
+          [":focus"]: {
+            boxShadow: "0px 0px 0px 3px rgba(121, 142, 200, 0.49)",
+            [`&.${outlinedInputClasses.disabled}`]: {
+              boxShadow: "none",
+            },
+            [`& .${outlinedInputClasses.notchedOutline}`]: {
+              border: "1px solid #8B94B3",
+            },
           },
-          [`&:hover .${outlinedInputClasses.notchedOutline}`]: {
-            border: "1px solid #8B94B3",
-          },
-          [`&:focus .${outlinedInputClasses.notchedOutline}`]: {
-            borderColor: "transparent",
+          [":active"]: {
+            boxShadow: "0px 0px 0px 3px rgba(121, 142, 200, 0.49)",
+            [`&.${outlinedInputClasses.disabled}`]: {
+              boxShadow: "none",
+            },
+            [`& .${outlinedInputClasses.notchedOutline}`]: {
+              border: "1px solid #8B94B3",
+            },
           },
           [`&.${outlinedInputClasses.disabled} .${outlinedInputClasses.notchedOutline}`]:
             {
@@ -114,17 +131,17 @@ export const mainTheme = createTheme({
                 opacity: 0.5,
               },
             },
-            [`&.Mui-focusVisible + .${switchClasses.thumb}`]: {
+            [`&.${switchClasses.disabled} + .${switchClasses.thumb}`]: {
               // color: theme.palette.secondary.main,
               border: "6px solid #fff",
             },
-            [`&.Mui-disabled + .${switchClasses.thumb}`]: {
+            [`&.${switchClasses.disabled} + .${switchClasses.thumb}`]: {
               // color:
               //   theme.palette.mode === "light"
               //     ? theme.palette.grey[100]
               //     : theme.palette.grey[600],
             },
-            [`&.Mui-disabled + .${switchClasses.track}`]: {
+            [`&.${switchClasses.disabled} + .${switchClasses.track}`]: {
               // opacity: theme.palette.mode === "light" ? 0.7 : 0.3,
             },
           },
@@ -147,5 +164,53 @@ export const mainTheme = createTheme({
         },
       },
     },
+
+    MuiStepConnector: {
+      styleOverrides: {
+        line: {
+          borderColor: "#4C546A",
+        },
+        root: {
+          [`&.${stepConnectorClasses.active}`]: {
+            [`& .${stepConnectorClasses.lineVertical}`]: {
+              borderColor: "red",
+            },
+          },
+          marginLeft: 8,
+        },
+      },
+    },
+
+    MuiStepIcon: {
+      styleOverrides: {
+        root: {},
+      },
+    },
+
+    MuiStepLabel: {
+      defaultProps: {
+        StepIconComponent: (props) => <StepIconComponent {...props} />,
+      },
+      styleOverrides: {
+        root: {
+          [`& .${stepLabelClasses.label}.${stepLabelClasses.active}`]: {
+            color: "#F66A4B",
+          },
+        },
+      },
+    },
   },
 });
+
+const StepIconComponent = styled("div")<{ active?: boolean }>(
+  ({ theme, active }) => ({
+    width: 17,
+    height: 17,
+    paddingRight: 0,
+    borderRadius: 100,
+    borderColor: active ? "#F66A4B" : "#4C546A",
+    borderWidth: 5,
+    borderStyle: "solid",
+    backgroundColor: "#FFF",
+  })
+);

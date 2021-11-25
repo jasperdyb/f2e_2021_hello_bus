@@ -18,6 +18,24 @@ import Chip from "@mui/material/Chip";
 import TextField from "@mui/material/TextField";
 import Switch from "@mui/material/Switch";
 
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemButton from "@mui/material/ListItemButton";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ListItemText from "@mui/material/ListItemText";
+import Divider from "@mui/material/Divider";
+import InboxIcon from "@mui/icons-material/Inbox";
+import DraftsIcon from "@mui/icons-material/Drafts";
+
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
+
+import Stepper from "@mui/material/Stepper";
+import Step from "@mui/material/Step";
+import StepLabel from "@mui/material/StepLabel";
+import StepContent from "@mui/material/StepContent";
+
 const Theme: NextPage = () => {
   const items = [
     {
@@ -52,8 +70,50 @@ const Theme: NextPage = () => {
       ],
     },
     {
+      type: "Select",
+      components: [
+        () => (
+          <Select labelId="demo-simple-select-label">
+            <MenuItem value={10}>Ten</MenuItem>
+            <MenuItem value={20}>Twenty</MenuItem>
+            <MenuItem value={30}>Thirty</MenuItem>
+          </Select>
+        ),
+      ],
+    },
+    {
       type: "Switch",
       components: [() => <Switch color="secondary" />],
+    },
+    {
+      type: "List",
+      components: [
+        () => (
+          <List>
+            <ListItem>
+              <ListItemText primary="Simple" />
+            </ListItem>
+            <ListItem>
+              <ListItemText primary="Drafts" />
+            </ListItem>
+          </List>
+        ),
+      ],
+    },
+
+    {
+      type: "Stepper",
+      components: [
+        () => (
+          <Stepper orientation="vertical">
+            {steps.map((step, index) => (
+              <Step key={step.label} active={index % 2 == 0}>
+                <StepLabel>{step.label}</StepLabel>
+              </Step>
+            ))}
+          </Stepper>
+        ),
+      ],
     },
   ];
 
@@ -85,5 +145,26 @@ const Theme: NextPage = () => {
     </Container>
   );
 };
+
+const steps = [
+  {
+    label: "Step",
+  },
+  {
+    label: "Step",
+  },
+  {
+    label: "Step",
+  },
+  {
+    label: "Step",
+  },
+  {
+    label: "Step",
+  },
+  {
+    label: "Step",
+  },
+];
 
 export default Theme;
