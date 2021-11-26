@@ -20,17 +20,18 @@ const Layout: React.FC<Props> = ({ children }) => {
   return (
     <>
       <Head>
-        <title>TaiwanTravel</title>
+        <title>HelloBus</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
       {children}
       <Footer>
         <Typography>
-          BikeFun ©{onMobile && <br />} 2021 Designer Vum. Engineer Jasper Chen.
-          All rights reserved.
+          HelloBus ©{onMobile && <br />} 2021 Designer Vum. Engineer Jasper
+          Chen. All rights reserved.
         </Typography>
       </Footer>
     </>
   );
 };
+
 export default Layout;

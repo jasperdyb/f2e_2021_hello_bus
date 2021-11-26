@@ -21,15 +21,15 @@ import ListItem from "@mui/material/ListItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 
-import logoYellow from "@img/logo_yellow.png";
+import HelloBus_light from "@img/HelloBus_light.png";
 
 import NavDrawer from "components/NavDrawer";
 
 const menu = [
-  { title: "最新消息", link: "/" },
-  { title: "探索路線", link: "/route" },
-  { title: "尋找站點", link: "/" },
-  { title: "常見問題", link: "/" },
+  { title: "公車動態", link: "/" },
+  { title: "附近站點", link: "/" },
+  { title: "班表查詢", link: "/" },
+  { title: "我的收藏", link: "/" },
 ];
 
 const Navbar: React.FC<AppBarProps> = ({ color }) => {
@@ -39,12 +39,8 @@ const Navbar: React.FC<AppBarProps> = ({ color }) => {
   const [menuOpen, setMenuOpen] = React.useState(false);
 
   return (
-    <CustomAppBar color={color} position={onMobile ? "fixed" : "sticky"}>
-      <Stack
-        direction={"row"}
-        justifyContent={"space-between"}
-        divider={onMobile ? null : <Divider orientation="vertical" flexItem />}
-      >
+    <CustomAppBar color={color} position={"fixed"}>
+      <Stack direction={"row"} justifyContent={"space-between"}>
         {onMobile && (
           <>
             <MenuButton
@@ -67,74 +63,48 @@ const Navbar: React.FC<AppBarProps> = ({ color }) => {
         <Link href={"/"} passHref>
           <TitleLinkStack textAlign={"center"}>
             <Image
-              src={logoYellow}
+              src={HelloBus_light}
               layout="intrinsic"
               alt="Logo"
-              width={"133px"}
-              height={"49px"}
+              width={160}
+              height={47}
             />
-
-            <Slogan typography={"subtitle1"}>Bike Fun！自行車旅遊網</Slogan>
           </TitleLinkStack>
         </Link>
 
-        {!onMobile &&
-          menu.map((item, index) => (
-            <Link key={index} href={item.link} passHref>
-              <NavButton color="inherit">{item.title}</NavButton>
-            </Link>
-          ))}
+        {!onMobile && (
+          <Stack direction={"row"} spacing={"50px"}>
+            {menu.map((item, index) => (
+              <Link key={index} href={item.link} passHref>
+                <NavButton color="inherit">
+                  <Typography typography={"h2"}> {item.title}</Typography>
+                </NavButton>
+              </Link>
+            ))}
+          </Stack>
+        )}
+        <Box />
       </Stack>
     </CustomAppBar>
   );
 };
 
 const CustomAppBar = muiStyled(AppBar)(({ theme }) => ({
-  backgroundColor: theme.palette.common.white,
-  color: theme.palette.common.black,
-  borderColor: theme.palette.divider,
+  backgroundColor: "transparent",
+  color: theme.palette.common.white,
   boxShadow: "none",
-  borderTopLeftRadius: 50,
-  borderTopRightRadius: 50,
-  borderWidth: 1,
-  borderStyle: "solid",
-  overflow: "hidden",
-  [theme.breakpoints.down("sm")]: {
-    borderTopLeftRadius: 0,
-    borderTopRightRadius: 0,
-    backgroundColor: "transparent",
-    borderColor: theme.palette.common.white,
-    borderWidth: 0,
-    borderBottomWidth: 1,
-  },
+  [theme.breakpoints.down("sm")]: {},
 }));
 
 const TitleLinkStack = muiStyled(Stack)(({ theme }) => ({
   position: "relative",
   cursor: "pointer",
-  margin: "19px 0",
-  padding: "0 128px",
+  padding: "24px 0 19px 50px",
   [theme.breakpoints.down("sm")]: {
     margin: "11px 0",
     padding: "0 32px",
   },
 }));
-
-const Slogan = muiStyled(Typography)(({ theme }) => ({
-  cursor: "pointer",
-  color: theme.palette.common.black,
-}));
-
-const themedButton = muiStyled(Button)(
-  ({ theme }) => `
-  cursor: pointer;
-  color: ${theme.palette.grey[700]}; 
-  &:hover {
-   background-color: ${theme.palette.primary.main}; 
-   color: ${theme.palette.primary.contrastText}; 
-  }
-`
-);
 
 const MenuButton = muiStyled(IconButton)(({ theme }) => ({
   color: theme.palette.common.white,
@@ -145,9 +115,15 @@ const MenuButton = muiStyled(IconButton)(({ theme }) => ({
   padding: "0 30px",
 }));
 
-const NavButton = styled(themedButton)`
-  flex-grow: 1;
-  border-radius: 0;
-`;
+const NavButton = muiStyled(IconButton)(({ theme }) => ({
+  cursor: "pointer",
+  color: theme.palette.common.white,
+  flexGrow: 1,
+  borderRadius: 0,
+  ":hover": {
+    backgroundColor: theme.palette.primary.main,
+    color: theme.palette.primary.contrastText,
+  },
+}));
 
 export default Navbar;

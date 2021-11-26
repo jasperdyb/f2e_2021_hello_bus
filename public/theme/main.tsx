@@ -37,6 +37,12 @@ export const mainTheme = createTheme({
       "Roboto",
       "sans-serif",
     ].join(","),
+    h1: {
+      fontSize: 26,
+    },
+    h2: {
+      fontSize: 20,
+    },
   },
 
   components: {
@@ -193,9 +199,9 @@ export const mainTheme = createTheme({
       },
       styleOverrides: {
         root: {
-          [`& .${stepLabelClasses.label}.${stepLabelClasses.active}`]: {
-            color: "#F66A4B",
-          },
+          // [`& .${stepLabelClasses.label}.${stepLabelClasses.active}`]: {
+          //   color: "#F66A4B",
+          // },
         },
       },
     },
