@@ -77,18 +77,19 @@ const BackgroundImageEclipse = muiStyled("div")(({ theme }) => ({
   overflow: "hidden",
   position: "relative",
 
+  // left: "-50vw",
   zIndex: 0,
 
   "&:before": {
     content: '""',
     position: "absolute",
     top: -1241,
-    left: -1945 / 8,
-    width: 1945,
+    // left: "-20%",
+    width: "100%",
     height: 1945,
 
     borderRadius: "50%",
-    boxShadow: "0px 0px 0px 9999px #FFF",
+    boxShadow: `0px 0px 0px 9999px ${theme.palette.common.white}`,
     zIndex: -1,
   },
 }));

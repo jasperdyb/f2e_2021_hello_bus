@@ -10,10 +10,8 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import Stack from "@mui/material/Stack";
 import { Typography } from "@mui/material";
 
-import MainInfoGrid from "components/MainInfoGrid";
-import InfoCard, { InfoCardContainer } from "components/InfoCard";
-import MainButton from "components/MainButton";
 import Layout from "components/Layout";
+import ButtonAnimatedBus from "components/ButtonAnimatedBus";
 
 import Background from "components/Background";
 import Navbar from "components/Navbar";
@@ -27,6 +25,7 @@ const Home = () => {
     <>
       <Background image={picBgPC} logo={HelloBus_light}>
         <Navbar />
+        <ButtonAnimatedBus title="bus" />
       </Background>
     </>
   );
