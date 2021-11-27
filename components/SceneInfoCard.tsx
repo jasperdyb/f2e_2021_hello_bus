@@ -28,20 +28,6 @@ import banner01 from "public/img//banner01.jpg";
 import { SceneSpotDataType } from "types/sceneSpots";
 
 import ImageWithFallback from "components/ImageWithFallback";
-
-const SceneTypeChip = styled(Chip)`
-  color: #fff;
-`;
-
-const Description = styled("div")`
-  height: 100px;
-`;
-
-const OpenTimeContainer = styled("div")`
-  max-width: 150px;
-  text-overflow: ellipsis;
-`;
-
 interface Props {
   sceneSpotData: SceneSpotDataType;
 }
@@ -164,4 +150,18 @@ const SceneInfoCard: React.FC<Props> = ({ sceneSpotData }) => {
     </>
   );
 };
+
+const SceneTypeChip = styled(Chip)`
+  color: #fff;
+`;
+
+const Description = styled("div")`
+  height: 100px;
+`;
+
+const OpenTimeContainer = styled("div")`
+  max-width: 150px;
+  text-overflow: ellipsis;
+`;
+
 export default SceneInfoCard;

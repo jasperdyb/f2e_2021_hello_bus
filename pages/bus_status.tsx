@@ -90,9 +90,9 @@ const BusStatus = () => {
           rowSpacing={1}
           columnSpacing={2}
         >
-          <SearchResultGrid item sm={6}>
+          <Grid item sm={6}>
             <SearchResult />
-          </SearchResultGrid>
+          </Grid>
           <Grid item sm={6}></Grid>
         </SearchResultContainer>
       </BusStatusContainer>
@@ -138,10 +138,6 @@ const SearchResultContainer = muiStyled(Grid)(({ theme }) => ({
   flexGrow: 1,
   paddingTop: 44,
   paddingBottom: 44,
-}));
-
-const SearchResultGrid = muiStyled(Grid)(({ theme }) => ({
-  display: "flex",
 }));
 
 export default BusStatus;
