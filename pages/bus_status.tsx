@@ -24,6 +24,7 @@ import SearchAutoComplete from "components/SearchAutoComplete";
 import Background from "components/Background";
 import Navbar, { menu } from "components/Navbar";
 import SearchSelect from "components/SearchSelect";
+import SearchResult from "components/SearchResult";
 
 import { CityOptions } from "types/bus";
 
@@ -33,54 +34,68 @@ const BusStatus = () => {
   return (
     <>
       <Navbar />
-      <NavbarContainer>
-        <NavBreadCrumbs />
-        <Grid
+      <BusStatusContainer>
+        <NavbarContainer>
+          <NavBreadCrumbs />
+          <Grid
+            container
+            alignItems={"center"}
+            paddingLeft={"277px"}
+            paddingRight={"277px"}
+            rowSpacing={1}
+            columnSpacing={2}
+          >
+            <Grid item sm={12}>
+              <Typography color={"secondary"}>
+                *選擇縣市有助於您更快找到路線
+              </Typography>
+            </Grid>
+            <Grid item sm={6}>
+              <SearchAutoComplete
+                disablePortal
+                options={CityOptions}
+                getOptionLabel={(option) => option.title}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    placeholder="請選擇縣市或手動輸入關鍵字"
+                    variant="outlined"
+                  />
+                )}
+              />
+            </Grid>
+            <Grid item sm={6}>
+              <SearchAutoComplete
+                disablePortal
+                options={CityOptions}
+                getOptionLabel={(option) => option.title}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    placeholder="請選擇路線或手動輸入關鍵字"
+                    variant="outlined"
+                  />
+                )}
+                freeSolo
+                forcePopupIcon
+                popupIcon={<SearchIcon />}
+                rotateIndicatorOnOpen={false}
+              />
+            </Grid>
+          </Grid>
+        </NavbarContainer>
+        <SearchResultContainer
           container
-          alignItems={"center"}
-          paddingLeft={"277px"}
-          paddingRight={"277px"}
+          alignItems={"stretch"}
           rowSpacing={1}
           columnSpacing={2}
         >
-          <Grid item sm={12}>
-            <Typography color={"secondary"}>
-              *選擇縣市有助於您更快找到路線
-            </Typography>
-          </Grid>
-          <Grid item sm={6}>
-            <SearchAutoComplete
-              disablePortal
-              options={CityOptions}
-              getOptionLabel={(option) => option.title}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  placeholder="請選擇縣市或手動輸入關鍵字"
-                  variant="outlined"
-                />
-              )}
-            />
-          </Grid>
-          <Grid item sm={6}>
-            <SearchAutoComplete
-              disablePortal
-              options={CityOptions}
-              getOptionLabel={(option) => option.title}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  placeholder="請選擇路線或手動輸入關鍵字"
-                  variant="outlined"
-                />
-              )}
-              freeSolo
-              popupIcon={<SearchIcon />}
-              rotateIndicatorOnOpen={false}
-            />
-          </Grid>
-        </Grid>
-      </NavbarContainer>
+          <SearchResultGrid item sm={6}>
+            <SearchResult />
+          </SearchResultGrid>
+          <Grid item sm={6}></Grid>
+        </SearchResultContainer>
+      </BusStatusContainer>
     </>
   );
 };
@@ -100,7 +115,7 @@ const FullScreenContainer = styled("div")`
 
 const NavbarContainer = muiStyled("div")(({ theme }) => ({
   backgroundColor: theme.palette.primary.main,
-  miHeight: 251,
+  minHeight: 251,
   width: "100%",
   borderEndEndRadius: 20,
   borderEndStartRadius: 20,
@@ -108,6 +123,25 @@ const NavbarContainer = muiStyled("div")(({ theme }) => ({
   paddingRight: 50,
   paddingLeft: 50,
   paddingBottom: 30,
+}));
+
+const BusStatusContainer = muiStyled("div")(({ theme }) => ({
+  height: "100vh",
+  flexDirection: "column",
+  display: "flex",
+  paddingBottom: 70,
+}));
+
+const SearchResultContainer = muiStyled(Grid)(({ theme }) => ({
+  paddingRight: 277,
+  paddingLeft: 277,
+  flexGrow: 1,
+  paddingTop: 44,
+  paddingBottom: 44,
+}));
+
+const SearchResultGrid = muiStyled(Grid)(({ theme }) => ({
+  display: "flex",
 }));
 
 export default BusStatus;
