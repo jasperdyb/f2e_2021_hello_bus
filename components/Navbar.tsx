@@ -4,7 +4,6 @@ import Image from "next/image";
 import styled from "styled-components";
 import { styled as muiStyled, useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
-
 import { PropTypes } from "@mui/material";
 
 import AppBar, { AppBarProps } from "@mui/material/AppBar";
@@ -31,10 +30,10 @@ import { faClock } from "@fortawesome/free-solid-svg-icons/faClock";
 import { faHeart } from "@fortawesome/free-solid-svg-icons/faHeart";
 
 export const menu = [
-  { title: "公車動態", link: "/", icon: faBus },
-  { title: "附近站點", link: "/", icon: faMapMarkerAlt },
-  { title: "班表查詢", link: "/", icon: faClock },
-  { title: "我的收藏", link: "/", icon: faHeart },
+  { title: "公車動態", label: "公車動態", link: "/bus_status", icon: faBus },
+  { title: "附近站點", label: "附近站點", link: "/", icon: faMapMarkerAlt },
+  { title: "班表查詢", label: "班表查詢", link: "/", icon: faClock },
+  { title: "我的收藏", label: "我的收藏", link: "/", icon: faHeart },
 ];
 
 const Navbar: React.FC<AppBarProps> = ({ color }) => {

@@ -3,8 +3,7 @@ import styled from "styled-components";
 import Image from "next/image";
 import Button from "@mui/material/Button";
 
-import Icon from "@mui/material/Icon";
-import Select, { SelectChangeEvent } from "@mui/material/Select";
+import Select, { SelectChangeEvent, SelectProps } from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 
 import slideMenuArrowSvg from "public/icon//slideMenuArrow.svg";
@@ -35,29 +34,26 @@ const SearchMenuItem = styled(MenuItem)`
   }
 `;
 
-interface Props {
-  value: number;
+interface Props extends SelectProps {
   selections: Array<{
     title: string;
     value: number;
   }>;
-  onChange: (event: SelectChangeEvent<unknown>) => void;
 }
 
-const SearchSelect: React.FC<Props> = ({ value, selections, onChange }) => {
+const SearchSelect: React.FC<Props> = (props) => {
   return (
-    <SearchPanelSelect
+    <Select
       labelId="region-label"
-      value={value}
-      onChange={onChange}
-      MenuProps={{ MenuListProps: { sx: { backgroundColor: "#F6F6F6" } } }}
+      {...props}
+      // MenuProps={{ MenuListProps: { sx: { backgroundColor: "#F6F6F6" } } }}
     >
-      {selections.map((item: { title: string; value: number }, index) => (
-        <SearchMenuItem key={index} value={item.value}>
+      {props.selections.map((item: { title: string; value: number }, index) => (
+        <MenuItem key={index} value={item.value}>
           {item.title}
-        </SearchMenuItem>
+        </MenuItem>
       ))}
-    </SearchPanelSelect>
+    </Select>
   );
 };
 

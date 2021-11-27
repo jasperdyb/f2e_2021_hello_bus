@@ -2,6 +2,7 @@ import { styled, createTheme } from "@mui/material/styles";
 import { outlinedInputClasses } from "@mui/material/OutlinedInput";
 import { switchClasses } from "@mui/material/Switch";
 import { stepConnectorClasses } from "@mui/material/StepConnector";
+import { autocompleteClasses } from "@mui/material/Autocomplete";
 import { stepLabelClasses } from "@mui/material/StepLabel";
 
 const colorSet = {
@@ -16,6 +17,7 @@ export const mainTheme = createTheme({
   palette: {
     primary: {
       main: colorSet.primary,
+      contrastText: "#FFF",
     },
     secondary: {
       main: colorSet.secondary,
@@ -202,6 +204,16 @@ export const mainTheme = createTheme({
           // [`& .${stepLabelClasses.label}.${stepLabelClasses.active}`]: {
           //   color: "#F66A4B",
           // },
+        },
+      },
+    },
+
+    MuiAutocomplete: {
+      styleOverrides: {
+        root: {
+          [`& .${autocompleteClasses.inputRoot}`]: {
+            [`& .${autocompleteClasses.input}`]: { padding: 0 },
+          },
         },
       },
     },

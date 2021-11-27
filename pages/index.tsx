@@ -3,6 +3,7 @@ import type { ReactElement } from "react";
 import styled from "styled-components";
 import Image from "next/image";
 import { useGetSceneSpots } from "services/sceneSpots";
+import { useRouter } from "next/router";
 
 import { styled as muiStyled, useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -21,6 +22,7 @@ import picBgPC from "@img/picBgPC.jpg";
 
 const Home = () => {
   const theme = useTheme();
+  const router = useRouter();
   const onMobile = useMediaQuery(theme.breakpoints.down("sm"));
   return (
     <>
@@ -29,7 +31,10 @@ const Home = () => {
         <Stack direction={"row"} justifyContent={"center"} spacing={11}>
           {menu.map((item, index) => (
             <Stack key={index} alignContent={"center"} textAlign={"center"}>
-              <ButtonAnimatedBus icon={item.icon} />
+              <ButtonAnimatedBus
+                icon={item.icon}
+                onClick={() => router.push(item.link)}
+              />
               <Typography mt={1.5}>{item.title}</Typography>
             </Stack>
           ))}
