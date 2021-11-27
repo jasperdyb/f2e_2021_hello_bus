@@ -24,7 +24,9 @@ const Background: React.FC<Props> = ({ image, logo, children }) => {
           objectFit="cover"
           placeholder="blur"
         />
-        <BackgroundImageEclipse />
+        <BackgroundImageEclipseContainer>
+          <BackgroundImageEclipse />
+        </BackgroundImageEclipseContainer>
       </BackgroundImageContainer>
       <BackgroundImageChildrenContainer>
         <LogoContainer
@@ -62,36 +64,38 @@ const BackgroundImageContainer = styled("div")`
   z-index: -100;
 `;
 
-const LogoContainer = styled(Grid)`
-  min-height: 100px;
-  margin-top: 219px;
-  margin-bottom: 224px;
-  z-index: 0;
-`;
+const LogoContainer = muiStyled(Grid)(({ theme }) => ({
+  minHeight: 100,
+  marginTop: 222,
+  marginBottom: 235,
+  zIndex: 0,
+}));
 
 const BackgroundImage = muiStyled(Image)(({ theme }) => ({}));
 
-const BackgroundImageEclipse = muiStyled("div")(({ theme }) => ({
-  width: "100%",
-  height: "100%",
+const BackgroundImageEclipseContainer = muiStyled("div")(({ theme }) => ({
+  width: "200%",
+  height: "700%",
+  marginLeft: "-50%",
+  marginTop: -1241,
   overflow: "hidden",
   position: "relative",
+  justifyContent: "center",
+  alignContent: "center",
 
   // left: "-50vw",
   zIndex: 0,
+}));
 
-  "&:before": {
-    content: '""',
-    position: "absolute",
-    top: -1241,
-    // left: "-20%",
-    width: "100%",
-    height: 1945,
+const BackgroundImageEclipse = muiStyled("div")(({ theme }) => ({
+  content: '""',
+  width: 1945,
+  height: 1945,
+  margin: "auto",
 
-    borderRadius: "50%",
-    boxShadow: `0px 0px 0px 9999px ${theme.palette.common.white}`,
-    zIndex: -1,
-  },
+  borderRadius: "50%",
+  boxShadow: `0px 0px 0px 9999px ${theme.palette.common.white}`,
+  zIndex: -1,
 }));
 
 const Slogan = muiStyled(Typography)(({ theme }) => ({

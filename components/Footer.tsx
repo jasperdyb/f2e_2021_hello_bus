@@ -26,7 +26,7 @@ const Footer: React.FC<Props> = ({ color, children }) => {
 };
 
 const FooterAppBar = muiStyled(AppBar)(({ theme }) => ({
-  padding: "33px 0",
+  padding: "21px 0",
   bottom: 0,
   top: "auto",
   color: theme.palette.common.white,

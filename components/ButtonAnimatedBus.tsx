@@ -21,11 +21,11 @@ import {
 } from "@fortawesome/react-fontawesome";
 
 interface Props {
-  title: string;
-  link?: string;
+  onClick?: () => void;
+  icon: FontAwesomeIconProps["icon"];
 }
 
-const ButtonAnimatedBus: React.FC<Props> = ({ title, link }) => {
+const ButtonAnimatedBus: React.FC<Props> = ({ onClick, icon }) => {
   const [IsHovering, setIsHovering] = useState(false);
   const theme = useTheme();
   const onMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -45,6 +45,7 @@ const ButtonAnimatedBus: React.FC<Props> = ({ title, link }) => {
 
   return (
     <ThemedButton
+      onClick={onClick}
       onMouseEnter={() => {
         console.log("onMouseOver");
         setIsHovering(true);
@@ -54,7 +55,7 @@ const ButtonAnimatedBus: React.FC<Props> = ({ title, link }) => {
         setIsHovering(false);
       }}
     >
-      <BusIcon />
+      <ButtonIcon icon={icon} />
       <CircleRight ref={circleRightRef} />
       <CircleLeft ref={circleLeftRef} />
     </ThemedButton>
@@ -90,9 +91,7 @@ const CircleLeft = muiStyled(TransparentCircle)(({ theme }) => ({
   backgroundColor: "#316E82",
 }));
 
-const BusIcon = muiStyled((props: FontAwesomeIconProps) => (
-  <FontAwesomeIcon icon={faBus} {...props} />
-))(({ theme }) => ({
+const ButtonIcon = muiStyled(FontAwesomeIcon)(({ theme }) => ({
   fontSize: 60,
   color: theme.palette.common.white,
   zIndex: 10,

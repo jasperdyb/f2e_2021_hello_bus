@@ -25,11 +25,16 @@ import HelloBus_light from "@img/HelloBus_light.png";
 
 import NavDrawer from "components/NavDrawer";
 
-const menu = [
-  { title: "公車動態", link: "/" },
-  { title: "附近站點", link: "/" },
-  { title: "班表查詢", link: "/" },
-  { title: "我的收藏", link: "/" },
+import { faBus } from "@fortawesome/free-solid-svg-icons/faBus";
+import { faMapMarkerAlt } from "@fortawesome/free-solid-svg-icons/faMapMarkerAlt";
+import { faClock } from "@fortawesome/free-solid-svg-icons/faClock";
+import { faHeart } from "@fortawesome/free-solid-svg-icons/faHeart";
+
+export const menu = [
+  { title: "公車動態", link: "/", icon: faBus },
+  { title: "附近站點", link: "/", icon: faMapMarkerAlt },
+  { title: "班表查詢", link: "/", icon: faClock },
+  { title: "我的收藏", link: "/", icon: faHeart },
 ];
 
 const Navbar: React.FC<AppBarProps> = ({ color }) => {
@@ -73,7 +78,7 @@ const Navbar: React.FC<AppBarProps> = ({ color }) => {
         </Link>
 
         {!onMobile && (
-          <Stack direction={"row"} spacing={"50px"}>
+          <Stack direction={"row"} spacing={6}>
             {menu.map((item, index) => (
               <Link key={index} href={item.link} passHref>
                 <NavButton color="inherit">
