@@ -25,6 +25,7 @@ import Background from "components/Background";
 import Navbar, { menu } from "components/Navbar";
 import SearchSelect from "components/SearchSelect";
 import SearchResult from "components/SearchResult";
+import BusSearchDialPad from "components/BusSearchDialPad";
 
 import { CityOptions } from "types/bus";
 
@@ -93,7 +94,9 @@ const BusStatus = () => {
           <Grid item sm={6}>
             <SearchResult />
           </Grid>
-          <Grid item sm={6}></Grid>
+          <Grid item sm={6}>
+            <BusSearchDialPad />
+          </Grid>
         </SearchResultContainer>
       </BusStatusContainer>
     </>
