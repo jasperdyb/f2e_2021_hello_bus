@@ -25,6 +25,7 @@ import SearchAutoComplete from "components/SearchAutoComplete";
 import Background from "components/Background";
 import Navbar, { menu } from "components/Navbar";
 import BusDetailRealTimeStatus from "components/BusDetailRealTimeStatus";
+import BusDetailRealTimeStatusMap from "components/BusDetailRealTimeStatusMap";
 
 import HelloBus_dark from "@img/HelloBus_dark.png";
 import {
@@ -87,9 +88,10 @@ const BusStatusDetail = () => {
       </BusStatusHeader>
       <BusStatusDetailContainer
         flexDirection={"row"}
-        justifyContent={"space-evenly"}
+        justifyContent={"flex-end"}
       >
         <BusDetailRealTimeStatus />
+        <BusDetailRealTimeStatusMap />
       </BusStatusDetailContainer>
     </>
   );
