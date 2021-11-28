@@ -1,6 +1,6 @@
 import * as React from "react";
 import Link from "next/link";
-import Image from "next/image";
+import Image, { ImageProps } from "next/image";
 import styled from "styled-components";
 import { styled as muiStyled, useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -36,7 +36,16 @@ export const menu = [
   { title: "我的收藏", label: "我的收藏", link: "/", icon: faHeart },
 ];
 
-const Navbar: React.FC<AppBarProps> = ({ color }) => {
+interface Props extends AppBarProps {
+  icon?: ImageProps["src"];
+  navTextColor?: string;
+}
+
+const Navbar: React.FC<Props> = ({
+  color,
+  icon = HelloBus_light,
+  navTextColor,
+}) => {
   const theme = useTheme();
   const onMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
@@ -67,7 +76,7 @@ const Navbar: React.FC<AppBarProps> = ({ color }) => {
         <Link href={"/"} passHref>
           <TitleLinkStack textAlign={"center"}>
             <Image
-              src={HelloBus_light}
+              src={icon}
               layout="intrinsic"
               alt="Logo"
               width={160}
@@ -81,7 +90,9 @@ const Navbar: React.FC<AppBarProps> = ({ color }) => {
             {menu.map((item, index) => (
               <Link key={index} href={item.link} passHref>
                 <NavButton color="inherit">
-                  <Typography typography={"h2"}> {item.title}</Typography>
+                  <Typography typography={"h2"} color={navTextColor}>
+                    {item.title}
+                  </Typography>
                 </NavButton>
               </Link>
             ))}
@@ -95,7 +106,6 @@ const Navbar: React.FC<AppBarProps> = ({ color }) => {
 
 const CustomAppBar = muiStyled(AppBar)(({ theme }) => ({
   backgroundColor: "transparent",
-  color: theme.palette.common.white,
   boxShadow: "none",
   [theme.breakpoints.down("sm")]: {},
 }));
@@ -124,10 +134,10 @@ const NavButton = muiStyled(IconButton)(({ theme }) => ({
   color: theme.palette.common.white,
   flexGrow: 1,
   borderRadius: 0,
-  ":hover": {
-    backgroundColor: theme.palette.primary.main,
-    color: theme.palette.primary.contrastText,
-  },
+  // ":hover": {
+  //   backgroundColor: theme.palette.primary.main,
+  //   color: theme.palette.primary.contrastText,
+  // },
 }));
 
 export default Navbar;

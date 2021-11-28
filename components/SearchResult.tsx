@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 
 import styled from "styled-components";
+import { useRouter } from "next/router";
 import { styled as muiStyled } from "@mui/material/styles";
 import { useForm, useWatch, Controller, SubmitHandler } from "react-hook-form";
 
@@ -32,13 +33,17 @@ import { Location } from "types/geolocation";
 const SearchResultCard = muiStyled(Card)(({ theme }) => ({ flexGrow: 1 }));
 
 const SearchResult: React.FC = () => {
+  const router = useRouter();
   return (
     <SearchResultCard raised>
       <SearchCardHeader title="搜尋結果" />
       <SearchCardContent>
         <SearchList>
           {mockBusRoutes.map((item, index) => (
-            <SearchListItem key={item.RouteUID}>
+            <SearchListItem
+              key={item.RouteUID}
+              onClick={() => router.push("/bus_status_detail")}
+            >
               <BusIndexInfoCard busIndexData={item} />
             </SearchListItem>
           ))}

@@ -13,18 +13,24 @@ const CustomBreadcrumbs = styled(Breadcrumbs)`
   padding: 16px 0;
 `;
 
-const NavBreadCrumbs: React.FC = () => {
+type Props = {
+  color?: string;
+};
+
+const NavBreadCrumbs: React.FC<Props> = ({ color }) => {
   const router = useRouter();
   return (
     <CustomBreadcrumbs
       aria-label="breadcrumb"
-      separator={<ThemedNavigateNextIcon fontSize="small" />}
+      color="primary"
+      separator={<ThemedNavigateNextIcon fontSize="small" color="inherit" />}
     >
-      <Link underline="hover" color="inherit" href="/">
-        <Typography color={"primary.contrastText"}>首頁</Typography>
+      <Link underline="hover" href="/">
+        <Typography>首頁</Typography>
       </Link>
-      <Typography color={"primary.contrastText"}>
-        {menu.find((i) => i.link === router.route).title}
+      <Typography>
+        {/* {menu.find((i) => i.link === router.route).title} */}
+        {router.route}
       </Typography>
     </CustomBreadcrumbs>
   );
