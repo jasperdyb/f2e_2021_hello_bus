@@ -21,6 +21,11 @@ import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
 import StepContent from "@mui/material/StepContent";
 
+import { testStops, testBusStop } from "services/bus";
+
+const stops = testStops[0].Stops;
+const busNearStop = testBusStop[0];
+
 const SearchResultCard = muiStyled(Card)(({ theme }) => ({ flexGrow: 1 }));
 
 const BusDetailRealTimeStatus: React.FC = () => {
@@ -32,7 +37,7 @@ const BusDetailRealTimeStatus: React.FC = () => {
           <Stack height={"100%"}>
             <Typography typography={"h2"}>行駛方向</Typography>
             <Typography typography={"h2"}>
-              <ColorText>往</ColorText> 龍潭站
+              <ColorText>往</ColorText> 板橋前站
             </Typography>
           </Stack>
         </Grid>
@@ -42,11 +47,18 @@ const BusDetailRealTimeStatus: React.FC = () => {
       </BusDetailRealTimeStatusHeader>
       <BusDetailRealTimeStatusBody>
         <Stepper orientation="vertical">
-          {steps.map((step, index) => (
-            <Step key={step.label} active={index % 2 == 0}>
-              <StepLabel>{step.label}</StepLabel>
-            </Step>
-          ))}
+          {stops.map((stop, index) => {
+            const nearStop = stop.StopSequence === busNearStop.StopSequence;
+
+            return (
+              <Step key={stop.StationID} active={nearStop}>
+                <StepLabel>
+                  {nearStop && <ColorText color="#F66A4B">即將進站</ColorText>}{" "}
+                  {stop.StopName.Zh_tw}
+                </StepLabel>
+              </Step>
+            );
+          })}
         </Stepper>
       </BusDetailRealTimeStatusBody>
     </BusDetailRealTimeStatusContainer>
@@ -59,8 +71,8 @@ const BusDetailRealTimeStatusHeader = muiStyled(Grid)(({ theme }) => ({
   paddingTop: 14,
 }));
 
-const ColorText = muiStyled("span")(({ theme }) => ({
-  color: theme.palette.secondary.main,
+const ColorText = muiStyled("span")<{ color?: string }>(({ theme, color }) => ({
+  color: color || theme.palette.secondary.main,
 }));
 
 const BusDetailRealTimeStatusContainer = muiStyled(Stack)(({ theme }) => ({
