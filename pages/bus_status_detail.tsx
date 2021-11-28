@@ -71,8 +71,9 @@ const BusStatusDetail = () => {
         </Grid>
       </BusStatusHeader>
       <BusStatusDetailContainer
-        flexDirection={"row"}
+        direction={"row"}
         justifyContent={"flex-end"}
+        spacing={3}
       >
         <BusDetailRealTimeStatus />
         <BusDetailRealTimeStatusMap />

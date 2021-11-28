@@ -45,6 +45,9 @@ export const mainTheme = createTheme({
     h2: {
       fontSize: 20,
     },
+    subtitle1: {
+      fontSize: 12,
+    },
   },
 
   components: {
@@ -179,7 +182,7 @@ export const mainTheme = createTheme({
         root: {
           [`&.${stepConnectorClasses.active}`]: {
             [`& .${stepConnectorClasses.lineVertical}`]: {
-              borderColor: "red",
+              borderColor: "#F66A4B",
             },
           },
           marginLeft: 8,

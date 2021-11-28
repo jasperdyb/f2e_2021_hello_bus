@@ -35,13 +35,21 @@ const BusDetailRealTimeStatus: React.FC = () => {
       <BusDetailRealTimeStatusHeader container>
         <Grid item sm={6}>
           <Stack height={"100%"}>
-            <Typography typography={"h2"}>行駛方向</Typography>
+            <Typography typography={"subtitle1"} color={"grey.400"}>
+              行駛方向
+            </Typography>
             <Typography typography={"h2"}>
               <ColorText>往</ColorText> 板橋前站
             </Typography>
           </Stack>
         </Grid>
-        <Grid item container sm={6} justifyContent={"flex-end"}>
+        <Grid
+          item
+          container
+          sm={6}
+          justifyContent={"flex-end"}
+          paddingRight={1}
+        >
           <ButtonAnimatedBus size={44} icon={faExchangeAlt}></ButtonAnimatedBus>
         </Grid>
       </BusDetailRealTimeStatusHeader>

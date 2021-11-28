@@ -7,11 +7,16 @@ import { useForm, useWatch, Controller, SubmitHandler } from "react-hook-form";
 
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
+import CardContent, { cardContentClasses } from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
 import Stack from "@mui/material/Stack";
 import List from "@mui/material/List";
+import Switch from "@mui/material/Switch";
+import FormControlLabel, {
+  formControlLabelClasses,
+} from "@mui/material/FormControlLabel";
 
 import {
   GoogleMap,
@@ -66,6 +71,8 @@ const BusDetailRealTimeStatusMap: React.FC = () => {
     lng: 0,
   });
 
+  const [ShowStops, setShowStops] = useState(false);
+
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
     googleMapsApiKey: process.env.GOOGLE_MAP_API_KEY,
@@ -95,7 +102,24 @@ const BusDetailRealTimeStatusMap: React.FC = () => {
         keyboardShortcuts: false,
       }}
     >
-      {/* Child components, such as markers, info windows, etc. */}
+      <SwitchCard>
+        <SwitchCardContent>
+          <SwitchLabel
+            value={ShowStops}
+            control={
+              <Switch
+                onChange={(_, checked) => {
+                  setShowStops(checked);
+                }}
+                color="secondary"
+              />
+            }
+            labelPlacement="start"
+            label="開啟自動定位"
+          />
+        </SwitchCardContent>
+      </SwitchCard>
+
       <FontAwesomeMarker
         position={position}
         icon={faCircle}
@@ -109,13 +133,6 @@ const BusDetailRealTimeStatusMap: React.FC = () => {
         color="#FFF"
         size={30}
       />
-
-      {/* <FontAwesomeMarker
-        position={route[0]}
-        icon={faCircle}
-        color="#000"
-        size={30}
-      /> */}
 
       <Polyline path={route} options={options} />
 
@@ -147,15 +164,18 @@ const BusDetailRealTimeStatusMap: React.FC = () => {
         size={20}
       />
 
-      {stops.slice(1, -1).map((s, i) => (
-        <FontAwesomeMarker
-          key={i}
-          position={s}
-          icon={faCircle}
-          color="#4C546A"
-          size={8}
-        />
-      ))}
+      {ShowStops &&
+        stops
+          .slice(1, -1)
+          .map((s, i) => (
+            <FontAwesomeMarker
+              key={i}
+              position={s}
+              icon={faCircle}
+              color="#4C546A"
+              size={8}
+            />
+          ))}
     </GoogleMap>
   ) : (
     <></>
@@ -188,72 +208,25 @@ const containerStyle = {
   height: "100%",
 };
 
-const BusDetailRealTimeStatusHeader = muiStyled(Grid)(({ theme }) => ({
-  width: "100%",
-  paddingBottom: 14,
-  paddingTop: 14,
+const SwitchCard = muiStyled(Card)(({ theme }) => ({
+  position: "absolute",
+  left: 24,
+  top: 24,
 }));
 
-const ColorText = muiStyled("span")(({ theme }) => ({
-  color: theme.palette.secondary.main,
+const SwitchLabel = muiStyled(FormControlLabel)(({ theme }) => ({
+  marginLeft: 8,
+  marginRight: 8,
+  [`& .${formControlLabelClasses.label}`]: {
+    marginRight: 6,
+  },
 }));
 
-const BusDetailRealTimeStatusContainer = muiStyled(Stack)(({ theme }) => ({
-  width: 414,
-  // height: 470,
+const SwitchCardContent = muiStyled(CardContent)(({ theme }) => ({
+  padding: 8,
+  [`&.${cardContentClasses.root}:last-child`]: {
+    paddingBottom: 8,
+  },
 }));
-
-const BusDetailRealTimeStatusBody = muiStyled(Grid)(({ theme }) => ({
-  width: "100%",
-  overflow: "auto",
-}));
-
-const steps = [
-  {
-    label: "Step",
-  },
-  {
-    label: "Step",
-  },
-  {
-    label: "Step",
-  },
-  {
-    label: "Step",
-  },
-  {
-    label: "Step",
-  },
-  {
-    label: "Step",
-  },
-  {
-    label: "Step",
-  },
-  {
-    label: "Step",
-  },
-  {
-    label: "Step",
-  },
-  {
-    label: "Step",
-  },
-  {
-    label: "Step",
-  },
-  {
-    label: "Step",
-  },
-  {
-    label: "Step",
-  },
-  {
-    label: "Step",
-  },
-  {
-    label: "Step",
-  },
-];
 
 export default BusDetailRealTimeStatusMap;
