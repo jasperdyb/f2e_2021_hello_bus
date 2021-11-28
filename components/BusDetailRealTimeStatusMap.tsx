@@ -98,7 +98,7 @@ const BusDetailRealTimeStatusMap: React.FC = () => {
         rotateControl: false,
         scaleControl: false,
         fullscreenControl: false,
-        gestureHandling: "none",
+        // gestureHandling: "none",
         keyboardShortcuts: false,
       }}
     >
@@ -115,7 +115,7 @@ const BusDetailRealTimeStatusMap: React.FC = () => {
               />
             }
             labelPlacement="start"
-            label="開啟自動定位"
+            label="顯示站點"
           />
         </SwitchCardContent>
       </SwitchCard>

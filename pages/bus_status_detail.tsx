@@ -60,7 +60,9 @@ const BusStatusDetail = () => {
           </Grid>
           <Grid item sm={6}>
             <Stack textAlign={"end"}>
-              <RoutIdTypography>{testRouteInfo.RouteID}</RoutIdTypography>
+              <RoutIdTypography>
+                {testRouteInfo.RouteName.Zh_tw}
+              </RoutIdTypography>
               <Typography typography={"h2"}>
                 {testRouteInfo.DepartureStopNameZh}{" "}
                 <FontAwesomeIcon icon={faArrowsAltH} />{" "}

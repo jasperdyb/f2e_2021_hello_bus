@@ -30,7 +30,8 @@ const NavBreadCrumbs: React.FC<Props> = ({ color }) => {
       </Link>
       <Typography>
         {/* {menu.find((i) => i.link === router.route).title} */}
-        {router.route}
+        {/* {router.route} */}
+        公車動態
       </Typography>
     </CustomBreadcrumbs>
   );
