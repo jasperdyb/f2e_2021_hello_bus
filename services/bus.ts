@@ -542,3 +542,19 @@ export const mockBusRoutes: Array<BusIndexDataType> = [
     VersionID: 1336,
   },
 ];
+
+export const parseBusRouteData = (
+  geometryString: string
+): Array<google.maps.LatLngLiteral> => {
+  return geometryString
+    .replace("LINESTRING (", "")
+    .replace(")", "")
+    .split(", ")
+    .map((latLng) => {
+      const latLngArray = latLng.split(" ");
+      return {
+        lng: Number(latLngArray[0]),
+        lat: Number(latLngArray[1]),
+      };
+    });
+};
