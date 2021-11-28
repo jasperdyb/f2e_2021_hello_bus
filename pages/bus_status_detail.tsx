@@ -11,21 +11,17 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import Stack from "@mui/material/Stack";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
-import Container from "@mui/material/Container";
-import Select from "@mui/material/Select";
-import TextField from "@mui/material/TextField";
-import SearchIcon from "@mui/icons-material/Search";
-import Autocomplete from "@mui/material/Autocomplete";
 
 import Layout from "components/Layout";
 import NavBreadCrumbs from "components/NavBreadCrumbs";
-import SearchAutoComplete from "components/SearchAutoComplete";
+import BusTimeTable from "components/BusTimeTable";
 
-import Background from "components/Background";
 import Navbar, { menu } from "components/Navbar";
+import MainDialog from "components/MainDialog";
 import ButtonAnimatedBus from "components/ButtonAnimatedBus";
 import BusDetailRealTimeStatus from "components/BusDetailRealTimeStatus";
 import BusDetailRealTimeStatusMap from "components/BusDetailRealTimeStatusMap";
+import BusTimeTableDialog from "components/BusTimeTableDialog";
 
 import HelloBus_dark from "@img/HelloBus_dark.png";
 import {
@@ -35,24 +31,7 @@ import {
 import { faClock } from "@fortawesome/free-solid-svg-icons/faClock";
 import { faArrowsAltH } from "@fortawesome/free-solid-svg-icons/faArrowsAltH";
 
-const test = {
-  RouteUID: "TPE16111",
-  RouteID: "16111",
-  HasSubRoutes: true,
-  BusRouteType: 11,
-  RouteName: {
-    Zh_tw: "307",
-    En: "307",
-  },
-  DepartureStopNameZh: "板橋",
-  DepartureStopNameEn: "Banqiao",
-  DestinationStopNameZh: "撫遠街",
-  DestinationStopNameEn: "Fuyuan St.",
-  City: "Taipei",
-  CityCode: "TPE",
-  UpdateTime: "2021-11-26T18:33:53+08:00",
-  VersionID: 1336,
-};
+import { testRouteInfo } from "services/bus";
 
 const BusStatusDetail = () => {
   const theme = useTheme();
@@ -74,18 +53,18 @@ const BusStatusDetail = () => {
                 alignItems={"center"}
                 spacing={1}
               >
-                <ButtonAnimatedBus size={44} icon={faClock}></ButtonAnimatedBus>
+                <BusTimeTableDialog />
                 <Typography typography={"h2"}>公車班表</Typography>
               </Stack>
             </Stack>
           </Grid>
           <Grid item sm={6}>
             <Stack textAlign={"end"}>
-              <RoutIdTypography>{test.RouteID}</RoutIdTypography>
+              <RoutIdTypography>{testRouteInfo.RouteID}</RoutIdTypography>
               <Typography typography={"h2"}>
-                {test.DepartureStopNameZh}{" "}
+                {testRouteInfo.DepartureStopNameZh}{" "}
                 <FontAwesomeIcon icon={faArrowsAltH} />{" "}
-                {test.DestinationStopNameZh}
+                {testRouteInfo.DestinationStopNameZh}
               </Typography>
             </Stack>
           </Grid>

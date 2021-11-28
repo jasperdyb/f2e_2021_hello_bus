@@ -117,7 +117,6 @@ export const mainTheme = createTheme({
         },
       },
     },
-
     MuiSwitch: {
       styleOverrides: {
         root: {
@@ -172,7 +171,6 @@ export const mainTheme = createTheme({
         },
       },
     },
-
     MuiStepConnector: {
       styleOverrides: {
         line: {
@@ -188,13 +186,11 @@ export const mainTheme = createTheme({
         },
       },
     },
-
     MuiStepIcon: {
       styleOverrides: {
         root: {},
       },
     },
-
     MuiStepLabel: {
       defaultProps: {
         StepIconComponent: (props) => <StepIconComponent {...props} />,
@@ -207,13 +203,22 @@ export const mainTheme = createTheme({
         },
       },
     },
-
     MuiAutocomplete: {
       styleOverrides: {
         root: {
           [`& .${autocompleteClasses.inputRoot}`]: {
             [`& .${autocompleteClasses.input}`]: { padding: 0 },
           },
+        },
+      },
+    },
+    MuiDialogTitle: {
+      styleOverrides: {
+        root: {
+          textAlign: "center",
+          minHeight: 60,
+          paddingTop: 30,
+          paddingBottom: 30,
         },
       },
     },
