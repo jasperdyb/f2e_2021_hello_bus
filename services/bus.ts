@@ -4,6 +4,7 @@ import {
   BusIndexDataType,
   BusStopsDataType,
   BusRouteDataType,
+  BusShapeDataType,
 } from "types/bus";
 import useSWR, { KeyedMutator } from "swr";
 import { tdxClientInstance } from "./tdxClient";
@@ -6557,6 +6558,43 @@ export function useGetBusRouteInfo(
   console.log("==== useGetBusRouteInfo error ===", error);
   return {
     routes: data,
+    isLoading: !error && !data,
+    isError: error,
+  };
+}
+
+export function useGetBusRouteShape(
+  City: string,
+  RouteName: string
+): {
+  routeShapes: Array<BusShapeDataType>;
+  isLoading: boolean;
+  isError: boolean;
+} {
+  console.log("==== useGetBusRouteShape ===");
+
+  const url = React.useMemo(
+    () => (City && RouteName ? apiList.BusRouteShape(City, RouteName) : null),
+    [City, RouteName]
+  );
+  console.log("==== useGetBusRouteShape url ===", url);
+
+  const { data, error } = useSWR(
+    url,
+    // null,
+    fetcher,
+    {
+      revalidateOnFocus: false,
+      // revalidateOnMount: false,
+      // revalidateIfStale: false,
+      // revalidateOnReconnect: false,
+    }
+  );
+
+  console.log("==== useGetBusRouteShape data ===", data);
+  console.log("==== useGetBusRouteShape error ===", error);
+  return {
+    routeShapes: data,
     isLoading: !error && !data,
     isError: error,
   };

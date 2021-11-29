@@ -61,9 +61,10 @@ const options = {
 
 type Props = {
   stops?: Array<StopType>;
+  routeShape?: Array<google.maps.LatLngLiteral>;
 };
 
-const BusDetailRealTimeStatusMap: React.FC<Props> = ({ stops }) => {
+const BusDetailRealTimeStatusMap: React.FC<Props> = ({ stops, routeShape }) => {
   const router = useRouter();
 
   const [MapCenter, setMapCenter] = useState({
@@ -144,8 +145,7 @@ const BusDetailRealTimeStatusMap: React.FC<Props> = ({ stops }) => {
         color="#FFF"
         size={30}
       />
-
-      <Polyline path={route} options={options} />
+      {routeShape && <Polyline path={routeShape} options={options} />}
 
       <FontAwesomeMarker
         position={stopLocations[0]}

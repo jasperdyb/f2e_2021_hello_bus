@@ -36,6 +36,8 @@ import {
   testRouteInfo,
   useGetBusRouteStops,
   useGetBusRouteInfo,
+  useGetBusRouteShape,
+  parseBusRouteData,
 } from "services/bus";
 
 const BusStatusDetail = () => {
@@ -57,6 +59,20 @@ const BusStatusDetail = () => {
         ? stops.find((r) => r.Direction === Direction).Stops
         : [],
     [stops, Direction]
+  );
+
+  const {
+    routeShapes,
+    isLoading: isShapeLoading,
+    isError: isShapeError,
+  } = useGetBusRouteShape(city, route);
+
+  const Shapes = React.useMemo(
+    () =>
+      routeShapes && !isShapeLoading && !isShapeError && routeShapes.length
+        ? parseBusRouteData(routeShapes[0].Geometry)
+        : [],
+    [routeShapes, Direction]
   );
 
   const {
@@ -121,7 +137,7 @@ const BusStatusDetail = () => {
           Direction={Direction}
           setDirection={setDirection}
         />
-        <BusDetailRealTimeStatusMap stops={Stops} />
+        <BusDetailRealTimeStatusMap stops={Stops} routeShape={Shapes} />
       </BusStatusDetailContainer>
     </>
   );

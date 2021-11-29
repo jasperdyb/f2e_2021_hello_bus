@@ -127,3 +127,17 @@ interface BusSubRoute {
   HolidayFirstBusTime?: string; //(, ): 假日去程第一班發車時間 ,
   HolidayLastBusTime?: string; //(, ): 假日返程第一班發車時間
 }
+
+export interface BusShapeDataType {
+  RouteUID: string; // (): 路線唯一識別代碼，規則為 {業管機關簡碼} + {RouteID}，其中 {業管機關簡碼} 可於Authority API中的AuthorityCode欄位查詢 ,
+  RouteID: string; // (): 地區既用中之路線代碼(為原資料內碼) ,
+  RouteName: NameType; //(): 路線名稱 ,
+  SubRouteUID: string; // (): 附屬路線唯一識別代碼，規則為 {業管機關簡碼} + {SubRouteID}，其中 {業管機關簡碼} 可於Authority API中的AuthorityCode欄位查詢 ,
+  SubRouteID?: string; // (, ): 附屬路線唯一識別代碼，規則為 {業管機關簡碼} + {SubRouteID}，其中 {業管機關簡碼} 可於Authority API中的AuthorityCode欄位查詢 ,
+  SubRouteName?: NameType; //(, ): 附屬路線名稱 ,
+  Direction: number; //(): 去返程，若無值則表示來源尚無區分去返程 : [0:'去程',1:'返程',2:'迴圈',255:'未知'] ,
+  Geometry: string; // (): well-known text，為路線軌跡資料 ,
+  EncodedPolyline: string; // (): 路線軌跡編碼(encoded polyline) ,
+  UpdateTime: string; // (): 資料更新日期時間(ISO8601格式:yyyy-MM-ddTHH:mm:sszzz) ,
+  VersionID: number; //(): 資料版本編號(由於該服務資料不再版控，固定帶入版號0)
+}
