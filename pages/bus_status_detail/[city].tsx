@@ -1,10 +1,11 @@
 import type { NextPage } from "next";
 import type { ReactElement } from "react";
+import React from "react";
 import styled from "styled-components";
 import Image from "next/image";
 import { CityOptions } from "types/bus";
 import { useGetSceneSpots } from "services/sceneSpots";
-
+import { useRouter } from "next/router";
 import { styled as muiStyled, useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 
@@ -31,11 +32,49 @@ import {
 import { faClock } from "@fortawesome/free-solid-svg-icons/faClock";
 import { faArrowsAltH } from "@fortawesome/free-solid-svg-icons/faArrowsAltH";
 
-import { testRouteInfo } from "services/bus";
+import {
+  testRouteInfo,
+  useGetBusRouteStops,
+  useGetBusRouteInfo,
+} from "services/bus";
 
 const BusStatusDetail = () => {
+  const router = useRouter();
+  const { city, route } = router.query;
   const theme = useTheme();
   const onMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const [Direction, setDirection] = React.useState(0);
+
+  const {
+    stops,
+    isLoading: isStopsLoading,
+    isError: isStopsError,
+  } = useGetBusRouteStops(city, route);
+
+  const Stops = React.useMemo(
+    () =>
+      stops && !isStopsLoading && !isStopsError
+        ? stops.find((r) => r.Direction === Direction).Stops
+        : [],
+    [stops, Direction]
+  );
+
+  const {
+    routes,
+    isLoading: isRoutesLoading,
+    isError: isRoutesError,
+  } = useGetBusRouteInfo(city, route);
+
+  const RoutInfo = React.useMemo(
+    () => (routes && !isRoutesLoading && !isRoutesError ? routes[0] : null),
+    [routes]
+  );
+
+  React.useEffect(() => {
+    console.log(city);
+    console.log(route);
+  }, [city, route]);
+
   return (
     <>
       <Navbar icon={HelloBus_dark} navTextColor="primary" />
@@ -44,41 +83,45 @@ const BusStatusDetail = () => {
         <NavBreadCrumbs color="primary" />
       </NavbarContainer>
       <BusStatusHeader>
-        <Grid container>
-          <Grid item sm={6}>
-            <Stack height={"100%"} justifyContent={"flex-end"}>
-              <Stack
-                width={"100%"}
-                direction={"row"}
-                alignItems={"center"}
-                spacing={1}
-              >
-                <BusTimeTableDialog />
-                <Typography typography={"h2"}>公車班表</Typography>
+        {RoutInfo && (
+          <Grid container>
+            <Grid item sm={6}>
+              <Stack height={"100%"} justifyContent={"flex-end"}>
+                <Stack
+                  width={"100%"}
+                  direction={"row"}
+                  alignItems={"center"}
+                  spacing={1}
+                >
+                  <BusTimeTableDialog />
+                  <Typography typography={"h2"}>公車班表</Typography>
+                </Stack>
               </Stack>
-            </Stack>
+            </Grid>
+            <Grid item sm={6}>
+              <Stack textAlign={"end"}>
+                <RoutIdTypography>{RoutInfo.RouteName.Zh_tw}</RoutIdTypography>
+                <Typography typography={"h2"}>
+                  {RoutInfo.DepartureStopNameZh}{" "}
+                  <FontAwesomeIcon icon={faArrowsAltH} />{" "}
+                  {RoutInfo.DestinationStopNameZh}
+                </Typography>
+              </Stack>
+            </Grid>
           </Grid>
-          <Grid item sm={6}>
-            <Stack textAlign={"end"}>
-              <RoutIdTypography>
-                {testRouteInfo.RouteName.Zh_tw}
-              </RoutIdTypography>
-              <Typography typography={"h2"}>
-                {testRouteInfo.DepartureStopNameZh}{" "}
-                <FontAwesomeIcon icon={faArrowsAltH} />{" "}
-                {testRouteInfo.DestinationStopNameZh}
-              </Typography>
-            </Stack>
-          </Grid>
-        </Grid>
+        )}
       </BusStatusHeader>
       <BusStatusDetailContainer
         direction={"row"}
         justifyContent={"flex-end"}
         spacing={3}
       >
-        <BusDetailRealTimeStatus />
-        <BusDetailRealTimeStatusMap />
+        <BusDetailRealTimeStatus
+          stops={Stops}
+          Direction={Direction}
+          setDirection={setDirection}
+        />
+        <BusDetailRealTimeStatusMap stops={Stops} />
       </BusStatusDetailContainer>
     </>
   );

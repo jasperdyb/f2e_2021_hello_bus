@@ -35,6 +35,7 @@ import { faCircle } from "@fortawesome/free-solid-svg-icons/faCircle";
 import { faCircle as farCircle } from "@fortawesome/free-regular-svg-icons/faCircle";
 
 import { parseBusRouteData, testBus, testRoute, testStops } from "services/bus";
+import { StopType } from "types/bus";
 
 const lat = testBus[0].BusPosition.PositionLat;
 const lng = testBus[0].BusPosition.PositionLon;
@@ -45,11 +46,6 @@ const position = {
 };
 
 const route = parseBusRouteData(testRoute.Geometry);
-
-const stops = testStops[0].Stops.map((s) => ({
-  lat: s.StopPosition.PositionLat,
-  lng: s.StopPosition.PositionLon,
-}));
 
 const options = {
   strokeColor: "#5CBCDB",
@@ -63,7 +59,11 @@ const options = {
   zIndex: 1,
 };
 
-const BusDetailRealTimeStatusMap: React.FC = () => {
+type Props = {
+  stops?: Array<StopType>;
+};
+
+const BusDetailRealTimeStatusMap: React.FC<Props> = ({ stops }) => {
   const router = useRouter();
 
   const [MapCenter, setMapCenter] = useState({
@@ -83,6 +83,17 @@ const BusDetailRealTimeStatusMap: React.FC = () => {
   }, []);
 
   const onUnmount = React.useCallback(function callback(map) {}, []);
+
+  const stopLocations = React.useMemo(
+    () =>
+      stops
+        ? stops.map((s) => ({
+            lat: s.StopPosition.PositionLat,
+            lng: s.StopPosition.PositionLon,
+          }))
+        : [],
+    [stops]
+  );
 
   return isLoaded ? (
     <GoogleMap
@@ -137,35 +148,35 @@ const BusDetailRealTimeStatusMap: React.FC = () => {
       <Polyline path={route} options={options} />
 
       <FontAwesomeMarker
-        position={stops[0]}
+        position={stopLocations[0]}
         icon={faCircle}
         color="#5CBCDB"
         size={7}
       />
 
       <FontAwesomeMarker
-        position={stops[0]}
+        position={stopLocations[0]}
         icon={farCircle}
         color="#5CBCDB"
         size={20}
       />
 
       <FontAwesomeMarker
-        position={stops[stops.length - 1]}
+        position={stopLocations[stopLocations.length - 1]}
         icon={faCircle}
         color="#5CBCDB"
         size={7}
       />
 
       <FontAwesomeMarker
-        position={stops[stops.length - 1]}
+        position={stopLocations[stopLocations.length - 1]}
         icon={farCircle}
         color="#5CBCDB"
         size={20}
       />
 
       {ShowStops &&
-        stops
+        stopLocations
           .slice(1, -1)
           .map((s, i) => (
             <FontAwesomeMarker

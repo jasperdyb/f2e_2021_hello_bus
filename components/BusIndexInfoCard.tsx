@@ -44,7 +44,7 @@ const BusIndexInfoCard: React.FC<Props> = ({ busIndexData }) => {
                 <Grid item xs={7} container rowSpacing={"12px"}>
                   <Grid item xs={12}>
                     <Typography typography={"h2"}>
-                      {busIndexData.RouteID}
+                      {busIndexData.RouteName.Zh_tw}
                     </Typography>
                   </Grid>
                   <Grid item xs={12}>
@@ -68,7 +68,7 @@ const BusIndexInfoCard: React.FC<Props> = ({ busIndexData }) => {
                 >
                   <Grid item xs={12}>
                     <LikeIcon icon={farHeart} />
-                    <LikedIcon icon={faHeart} />
+                    {/* <LikedIcon icon={faHeart} /> */}
                   </Grid>
                   <Grid item xs={12}>
                     <Stack

@@ -26,27 +26,52 @@ import BusIndexInfoCard from "components/BusIndexInfoCard";
 import { BusIndexDataType } from "types/bus";
 import { mockBusRoutes } from "services/bus";
 
-import { useJsApiLoader } from "@react-google-maps/api";
-import { useGeolocationContext } from "context/geolocation";
-import { Location } from "types/geolocation";
+import { useFormContext } from "react-hook-form";
+import { useGetBusRouteIndex } from "services/bus";
 
 const SearchResultCard = muiStyled(Card)(({ theme }) => ({ flexGrow: 1 }));
 
 const SearchResult: React.FC = () => {
   const router = useRouter();
+
+  const { watch } = useFormContext();
+
+  const keyword = watch("keyword");
+  const city = watch("city");
+
+  const searchBusRouteName = React.useMemo(
+    () => `contains(RouteName/Zh_tw,'${keyword}')`,
+    [keyword]
+  );
+
+  const { buses, isError, isLoading } = useGetBusRouteIndex(city, {
+    $filter: searchBusRouteName,
+  });
+
+  React.useEffect(() => {
+    console.log(city, keyword);
+  }, [keyword, city]);
+
   return (
     <SearchResultCard raised>
       <SearchCardHeader title="搜尋結果" />
       <SearchCardContent>
         <SearchList>
-          {mockBusRoutes.map((item, index) => (
-            <SearchListItem
-              key={item.RouteUID}
-              onClick={() => router.push("/bus_status_detail")}
-            >
-              <BusIndexInfoCard busIndexData={item} />
-            </SearchListItem>
-          ))}
+          {buses &&
+            !isError &&
+            !isLoading &&
+            buses.map((item, index) => (
+              <SearchListItem
+                key={item.RouteUID}
+                onClick={() =>
+                  router.push(
+                    `/bus_status_detail/${city}?route=${item.RouteName.Zh_tw}`
+                  )
+                }
+              >
+                <BusIndexInfoCard busIndexData={item} />
+              </SearchListItem>
+            ))}
         </SearchList>
       </SearchCardContent>
     </SearchResultCard>

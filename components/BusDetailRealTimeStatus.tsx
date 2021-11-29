@@ -22,14 +22,26 @@ import StepLabel from "@mui/material/StepLabel";
 import StepContent from "@mui/material/StepContent";
 
 import { testStops, testBusStop } from "services/bus";
+import { StopType } from "types/bus";
 
 const stops = testStops[0].Stops;
 const busNearStop = testBusStop[0];
 
 const SearchResultCard = muiStyled(Card)(({ theme }) => ({ flexGrow: 1 }));
 
-const BusDetailRealTimeStatus: React.FC = () => {
+type Props = {
+  stops?: Array<StopType>;
+  Direction: number;
+  setDirection: (direction: number) => void;
+};
+
+const BusDetailRealTimeStatus: React.FC<Props> = ({
+  stops,
+  Direction,
+  setDirection,
+}) => {
   const router = useRouter();
+
   return (
     <BusDetailRealTimeStatusContainer>
       <BusDetailRealTimeStatusHeader container>
@@ -39,7 +51,8 @@ const BusDetailRealTimeStatus: React.FC = () => {
               行駛方向
             </Typography>
             <Typography typography={"h2"}>
-              <ColorText>往</ColorText> 板橋前站
+              <ColorText>往</ColorText>
+              {stops.length && stops[stops.length - 1].StopName.Zh_tw}
             </Typography>
           </Stack>
         </Grid>
@@ -50,7 +63,11 @@ const BusDetailRealTimeStatus: React.FC = () => {
           justifyContent={"flex-end"}
           paddingRight={1}
         >
-          <ButtonAnimatedBus size={44} icon={faExchangeAlt}></ButtonAnimatedBus>
+          <ButtonAnimatedBus
+            size={44}
+            icon={faExchangeAlt}
+            onClick={() => setDirection(!Direction ? 1 : 0)}
+          ></ButtonAnimatedBus>
         </Grid>
       </BusDetailRealTimeStatusHeader>
       <BusDetailRealTimeStatusBody>

@@ -49,10 +49,6 @@ const BusSearchDialPad: React.FC = () => {
     setValue("keyword", "");
   }, [setValue, keyword]);
 
-  React.useEffect(() => {
-    console.log(keyword);
-  }, [keyword]);
-
   const buttons: Array<Props> = useMemo(
     () => [
       {

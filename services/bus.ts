@@ -1,4 +1,12 @@
-import { BusIndexDataType } from "types/bus";
+import React from "react";
+import apiList from "services/_api";
+import {
+  BusIndexDataType,
+  BusStopsDataType,
+  BusRouteDataType,
+} from "types/bus";
+import useSWR, { KeyedMutator } from "swr";
+import { tdxClientInstance } from "./tdxClient";
 
 export const mockBusRoutes: Array<BusIndexDataType> = [
   {
@@ -6405,3 +6413,151 @@ export const parseBusRouteData = (
       };
     });
 };
+
+const fetcher = (
+  url: string,
+  $top?: number,
+  $filter?: String,
+  $select?: Array<string>
+) => {
+  if (url) {
+    return tdxClientInstance
+      .get(url, {
+        params: {
+          $top,
+          $filter: $filter ? $filter : null,
+          // $filter: "contains(RouteName/Zh_tw,'307')",
+          $select: $select ? $select.join(",") : null,
+        },
+      })
+      .then((res) => res.data);
+  } else {
+    return null;
+  }
+};
+
+const busRouteIndexSelect = [
+  "RouteUID",
+  "RouteID",
+  "RouteName",
+  "DepartureStopNameZh",
+  "DepartureStopNameEn",
+  "DestinationStopNameZh",
+  "DestinationStopNameEn",
+  "City",
+  "CityCode",
+];
+
+export function useGetBusRouteIndex(
+  City?: string,
+  options?: {
+    $top?: String;
+    $filter?: String;
+  }
+): {
+  buses: Array<BusIndexDataType>;
+  isLoading: boolean;
+  isError: boolean;
+} {
+  console.log("==== useGetBusRouteIndex ===");
+
+  const url = React.useMemo(
+    () => (City ? apiList.BusIndex(City) : null),
+    [City]
+  );
+  console.log("==== useGetBusRouteIndex url ===", url);
+
+  const { data, error, mutate } = useSWR(
+    [url, options?.$top, options?.$filter, busRouteIndexSelect],
+    // null,
+    fetcher,
+    {
+      revalidateOnFocus: false,
+      // revalidateOnMount: false,
+      // revalidateIfStale: false,
+      // revalidateOnReconnect: false,
+    }
+  );
+
+  console.log("==== useGetBusRouteIndex data ===", data);
+  console.log("==== useGetBusRouteIndex error ===", error);
+  return {
+    buses: data,
+    isLoading: !error && !data,
+    isError: error,
+  };
+}
+
+export function useGetBusRouteStops(
+  City: string,
+  RouteName: string
+): {
+  stops: Array<BusStopsDataType>;
+  isLoading: boolean;
+  isError: boolean;
+} {
+  console.log("==== useGetBusRouteStops ===");
+
+  const url = React.useMemo(
+    () => (City && RouteName ? apiList.BusRouteStops(City, RouteName) : null),
+    [City, RouteName]
+  );
+  console.log("==== useGetBusRouteStops url ===", url);
+
+  const { data, error } = useSWR(
+    url,
+    // null,
+    fetcher,
+    {
+      revalidateOnFocus: false,
+      // revalidateOnMount: false,
+      // revalidateIfStale: false,
+      // revalidateOnReconnect: false,
+    }
+  );
+
+  console.log("==== useGetBusRouteStops data ===", data);
+  console.log("==== useGetBusRouteStops error ===", error);
+  return {
+    stops: data,
+    isLoading: !error && !data,
+    isError: error,
+  };
+}
+
+export function useGetBusRouteInfo(
+  City: string,
+  RouteName: string
+): {
+  routes: Array<BusRouteDataType>;
+  isLoading: boolean;
+  isError: boolean;
+} {
+  console.log("==== useGetBusRouteInfo ===");
+
+  const url = React.useMemo(
+    () => (City && RouteName ? apiList.BusRouteInfo(City, RouteName) : null),
+    [City, RouteName]
+  );
+  console.log("==== useGetBusRouteInfo url ===", url);
+
+  const { data, error } = useSWR(
+    url,
+    // null,
+    fetcher,
+    {
+      revalidateOnFocus: false,
+      // revalidateOnMount: false,
+      // revalidateIfStale: false,
+      // revalidateOnReconnect: false,
+    }
+  );
+
+  console.log("==== useGetBusRouteInfo data ===", data);
+  console.log("==== useGetBusRouteInfo error ===", error);
+  return {
+    routes: data,
+    isLoading: !error && !data,
+    isError: error,
+  };
+}

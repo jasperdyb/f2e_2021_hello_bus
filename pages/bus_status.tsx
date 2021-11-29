@@ -33,17 +33,12 @@ import { BusSearchFormContextProvider } from "context/busSearchForm";
 
 import { useFormContext, Controller } from "react-hook-form";
 
+import { useGetBusRouteIndex } from "services/bus";
 const BusStatus = () => {
   const theme = useTheme();
   const onMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
-  const { control, watch } = useFormContext();
-
-  const keyword = watch("keyword");
-
-  // React.useEffect(() => {
-  //   console.log(keyword);
-  // }, [keyword]);
+  const { control, setValue } = useFormContext();
 
   return (
     <>
@@ -88,6 +83,7 @@ const BusStatus = () => {
                     value={CityOptions.find((c) => c.searchString === value)}
                     onChange={(event: any, newValue: CityOptionType) => {
                       onChange(newValue.searchString);
+                      setValue("keyword", "");
                     }}
                   />
                 )}
