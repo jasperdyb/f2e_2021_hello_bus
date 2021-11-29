@@ -1,4 +1,11 @@
-export const CityOptions = [
+export type CityOptionType = {
+  title: string;
+  value: number;
+  searchString: string;
+  region: number;
+};
+
+export const CityOptions: Array<CityOptionType> = [
   { title: "臺北市", value: 10, searchString: "Taipei", region: 10 },
   { title: "新北市", value: 20, searchString: "NewTaipei", region: 10 },
   { title: "基隆市", value: 30, searchString: "Keelung", region: 10 },

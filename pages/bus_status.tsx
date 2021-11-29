@@ -1,4 +1,5 @@
 import type { NextPage } from "next";
+import React from "react";
 import type { ReactElement } from "react";
 import styled from "styled-components";
 import Image from "next/image";
@@ -27,11 +28,23 @@ import SearchSelect from "components/SearchSelect";
 import SearchResult from "components/SearchResult";
 import BusSearchDialPad from "components/BusSearchDialPad";
 
-import { CityOptions } from "types/bus";
+import { CityOptions, CityOptionType } from "types/bus";
+import { BusSearchFormContextProvider } from "context/busSearchForm";
+
+import { useFormContext, Controller } from "react-hook-form";
 
 const BusStatus = () => {
   const theme = useTheme();
   const onMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
+  const { control, watch } = useFormContext();
+
+  const keyword = watch("keyword");
+
+  // React.useEffect(() => {
+  //   console.log(keyword);
+  // }, [keyword]);
+
   return (
     <>
       <Navbar />
@@ -52,35 +65,63 @@ const BusStatus = () => {
               </Typography>
             </Grid>
             <Grid item sm={6}>
-              <SearchAutoComplete
-                disablePortal
-                options={CityOptions}
-                getOptionLabel={(option) => option.title}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    placeholder="請選擇縣市或手動輸入關鍵字"
-                    variant="outlined"
+              <Controller
+                name="city"
+                control={control}
+                render={({
+                  field: { onChange, onBlur, value, name, ref },
+                  fieldState: { invalid, isTouched, isDirty, error },
+                  formState,
+                }) => (
+                  <SearchAutoComplete
+                    disablePortal
+                    disableClearable
+                    options={CityOptions}
+                    getOptionLabel={(option) => option.title}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        placeholder="請選擇縣市或手動輸入關鍵字"
+                        variant="outlined"
+                      />
+                    )}
+                    value={CityOptions.find((c) => c.searchString === value)}
+                    onChange={(event: any, newValue: CityOptionType) => {
+                      onChange(newValue.searchString);
+                    }}
                   />
                 )}
               />
             </Grid>
             <Grid item sm={6}>
-              <SearchAutoComplete
-                disablePortal
-                options={CityOptions}
-                getOptionLabel={(option) => option.title}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    placeholder="請選擇路線或手動輸入關鍵字"
-                    variant="outlined"
+              <Controller
+                name="keyword"
+                control={control}
+                render={({
+                  field: { onChange, onBlur, value, name, ref },
+                  fieldState: { invalid, isTouched, isDirty, error },
+                  formState,
+                }) => (
+                  <SearchAutoComplete
+                    disablePortal
+                    options={[]}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        placeholder="請選擇路線或手動輸入關鍵字"
+                        variant="outlined"
+                      />
+                    )}
+                    freeSolo
+                    forcePopupIcon
+                    popupIcon={<SearchIcon />}
+                    rotateIndicatorOnOpen={false}
+                    value={value}
+                    inputValue={value}
+                    onChange={onChange}
+                    onInputChange={onChange}
                   />
                 )}
-                freeSolo
-                forcePopupIcon
-                popupIcon={<SearchIcon />}
-                rotateIndicatorOnOpen={false}
               />
             </Grid>
           </Grid>
@@ -106,7 +147,9 @@ const BusStatus = () => {
 BusStatus.getLayout = function getLayout(page: ReactElement) {
   return (
     <FullScreenContainer>
-      <Layout>{page}</Layout>
+      <Layout>
+        <BusSearchFormContextProvider>{page}</BusSearchFormContextProvider>
+      </Layout>
     </FullScreenContainer>
   );
 };
