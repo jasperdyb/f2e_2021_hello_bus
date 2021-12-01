@@ -1,11 +1,14 @@
 import React from "react";
 import apiList from "services/_api";
 import {
+  PointType,
   BusIndexDataType,
   BusStopsDataType,
   BusRouteDataType,
   BusShapeDataType,
   BusScheduleDataType,
+  BusN1EstimateTimeDataType,
+  BusA1DataType,
 } from "types/bus";
 import useSWR, { KeyedMutator } from "swr";
 import { tdxClientInstance } from "./tdxClient";
@@ -6416,6 +6419,13 @@ export const parseBusRouteData = (
     });
 };
 
+export const parsePointType = (point: PointType): google.maps.LatLngLiteral => {
+  return {
+    lng: Number(point.PositionLon),
+    lat: Number(point.PositionLat),
+  };
+};
+
 const fetcher = (
   url: string,
   $top?: number,
@@ -6634,6 +6644,86 @@ export function useGetBusRouteSchedule(
   console.log("==== useGetBusRouteSchedule error ===", error);
   return {
     schedules: data,
+    isLoading: !error && !data,
+    isError: error,
+  };
+}
+
+export function useGetBusRouteEstimatedTimeOfArrival(
+  City: string,
+  RouteName: string
+): {
+  estimatedTimeOfArrival: Array<BusN1EstimateTimeDataType>;
+  isLoading: boolean;
+  isError: boolean;
+} {
+  console.log("==== useGetBusRouteEstimatedTimeOfArrival ===");
+
+  const url = React.useMemo(
+    () =>
+      City && RouteName
+        ? apiList.BusRouteEstimatedTimeOfArrival(City, RouteName)
+        : null,
+    [City, RouteName]
+  );
+  console.log("==== useGetBusRouteEstimatedTimeOfArrival url ===", url);
+
+  const { data, error } = useSWR(
+    url,
+    // null,
+    fetcher,
+    {
+      // revalidateOnFocus: false,
+      // revalidateOnMount: false,
+      // revalidateIfStale: false,
+      // revalidateOnReconnect: false,
+    }
+  );
+
+  console.log("==== useGetBusRouteEstimatedTimeOfArrival data ===", data);
+  console.log("==== useGetBusRouteEstimatedTimeOfArrival error ===", error);
+  return {
+    estimatedTimeOfArrival: data,
+    isLoading: !error && !data,
+    isError: error,
+  };
+}
+
+export function useGetBusRouteBusRealTimeByFrequency(
+  City: string,
+  RouteName: string
+): {
+  buses: Array<BusA1DataType>;
+  isLoading: boolean;
+  isError: boolean;
+} {
+  console.log("==== useGetBusRouteBusRealTimeByFrequency ===");
+
+  const url = React.useMemo(
+    () =>
+      City && RouteName
+        ? apiList.BusRouteBusRealTimeByFrequency(City, RouteName)
+        : null,
+    [City, RouteName]
+  );
+  console.log("==== useGetBusRouteBusRealTimeByFrequency url ===", url);
+
+  const { data, error } = useSWR(
+    url,
+    // null,
+    fetcher,
+    {
+      // revalidateOnFocus: false,
+      // revalidateOnMount: false,
+      // revalidateIfStale: false,
+      // revalidateOnReconnect: false,
+    }
+  );
+
+  console.log("==== useGetBusRouteBusRealTimeByFrequency data ===", data);
+  console.log("==== useGetBusRouteBusRealTimeByFrequency error ===", error);
+  return {
+    buses: data,
     isLoading: !error && !data,
     isError: error,
   };

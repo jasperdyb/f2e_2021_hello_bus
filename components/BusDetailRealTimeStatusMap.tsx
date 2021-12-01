@@ -34,8 +34,13 @@ import { faBus } from "@fortawesome/free-solid-svg-icons/faBus";
 import { faCircle } from "@fortawesome/free-solid-svg-icons/faCircle";
 import { faCircle as farCircle } from "@fortawesome/free-regular-svg-icons/faCircle";
 
-import { parseBusRouteData, testBus, testRoute, testStops } from "services/bus";
-import { StopType } from "types/bus";
+import {
+  parseBusRouteData,
+  testBus,
+  testRoute,
+  parsePointType,
+} from "services/bus";
+import { StopType, BusA1DataType } from "types/bus";
 
 const lat = testBus[0].BusPosition.PositionLat;
 const lng = testBus[0].BusPosition.PositionLon;
@@ -60,11 +65,16 @@ const options = {
 };
 
 type Props = {
+  buses?: Array<BusA1DataType>;
   stops?: Array<StopType>;
   routeShape?: Array<google.maps.LatLngLiteral>;
 };
 
-const BusDetailRealTimeStatusMap: React.FC<Props> = ({ stops, routeShape }) => {
+const BusDetailRealTimeStatusMap: React.FC<Props> = ({
+  stops,
+  buses,
+  routeShape,
+}) => {
   const router = useRouter();
 
   const [MapCenter, setMapCenter] = useState({
@@ -131,20 +141,28 @@ const BusDetailRealTimeStatusMap: React.FC<Props> = ({ stops, routeShape }) => {
           />
         </SwitchCardContent>
       </SwitchCard>
+      {buses &&
+        buses.map((b) => (
+          <>
+            {b.BusPosition && (
+              <>
+                <FontAwesomeMarker
+                  position={parsePointType(b.BusPosition)}
+                  icon={faCircle}
+                  color="#F66A4B"
+                  size={50}
+                />
+                <FontAwesomeMarker
+                  position={parsePointType(b.BusPosition)}
+                  icon={faBus}
+                  color="#FFF"
+                  size={30}
+                />
+              </>
+            )}
+          </>
+        ))}
 
-      <FontAwesomeMarker
-        position={position}
-        icon={faCircle}
-        color="#F66A4B"
-        size={50}
-      />
-
-      <FontAwesomeMarker
-        position={position}
-        icon={faBus}
-        color="#FFF"
-        size={30}
-      />
       {routeShape && <Polyline path={routeShape} options={options} />}
 
       <FontAwesomeMarker

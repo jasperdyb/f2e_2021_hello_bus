@@ -32,7 +32,6 @@ import {
 import { faClock } from "@fortawesome/free-solid-svg-icons/faClock";
 import { faArrowsAltH } from "@fortawesome/free-solid-svg-icons/faArrowsAltH";
 
-import { BusScheduleDataType } from "types/bus";
 import {
   testRouteInfo,
   useGetBusRouteStops,
@@ -40,6 +39,8 @@ import {
   useGetBusRouteShape,
   useGetBusRouteSchedule,
   parseBusRouteData,
+  useGetBusRouteEstimatedTimeOfArrival,
+  useGetBusRouteBusRealTimeByFrequency,
 } from "services/bus";
 
 const BusStatusDetail = () => {
@@ -61,6 +62,20 @@ const BusStatusDetail = () => {
         ? stops.find((r) => r.Direction === Direction).Stops
         : [],
     [stops, Direction]
+  );
+
+  const {
+    estimatedTimeOfArrival,
+    isLoading: isEstimateLoading,
+    isError: isEstimateError,
+  } = useGetBusRouteEstimatedTimeOfArrival(city, route);
+
+  const EstimatedTimeOfArrival = React.useMemo(
+    () =>
+      estimatedTimeOfArrival && !isEstimateLoading && !isEstimateError
+        ? estimatedTimeOfArrival.filter((r) => r.Direction === Direction)
+        : [],
+    [estimatedTimeOfArrival, Direction]
   );
 
   const {
@@ -94,10 +109,7 @@ const BusStatusDetail = () => {
     isError: isScheduleError,
   } = useGetBusRouteSchedule(city, route);
 
-  const Schedules: {
-    toDestinationRoute: BusScheduleDataType;
-    toDepartureRoute: BusScheduleDataType;
-  } = React.useMemo(
+  const Schedules = React.useMemo(
     () =>
       schedules && !isScheduleLoading && !isScheduleError && schedules.length
         ? {
@@ -105,16 +117,30 @@ const BusStatusDetail = () => {
             toDepartureRoute: schedules.find((s) => s.Direction === 1),
           }
         : {
-            toDestinationRoute: [],
-            toDepartureRoute: [],
+            toDestinationRoute: null,
+            toDepartureRoute: null,
           },
     [schedules, Direction]
   );
 
+  const {
+    buses,
+    isLoading: isBusLoading,
+    isError: isBusError,
+  } = useGetBusRouteBusRealTimeByFrequency(city, route);
+
+  const Buses = React.useMemo(
+    () =>
+      buses && !isBusLoading && !isBusError
+        ? buses.filter((r) => r.Direction === Direction)
+        : [],
+    [buses, Direction]
+  );
+
   React.useEffect(() => {
-    console.log(city);
-    console.log(route);
-  }, [city, route]);
+    console.log("=== EstimatedTimeOfArrival");
+    console.log(EstimatedTimeOfArrival);
+  }, [EstimatedTimeOfArrival]);
 
   return (
     <>
@@ -162,11 +188,15 @@ const BusStatusDetail = () => {
         spacing={3}
       >
         <BusDetailRealTimeStatus
-          stops={Stops}
+          stops={EstimatedTimeOfArrival}
           Direction={Direction}
           setDirection={setDirection}
         />
-        <BusDetailRealTimeStatusMap stops={Stops} routeShape={Shapes} />
+        <BusDetailRealTimeStatusMap
+          stops={Stops}
+          routeShape={Shapes}
+          buses={Buses}
+        />
       </BusStatusDetailContainer>
     </>
   );

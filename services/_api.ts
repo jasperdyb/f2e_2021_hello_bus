@@ -14,5 +14,7 @@ const apiList = {
     `${baseURL}/Bus/EstimatedTimeOfArrival/City/${City}/${RouteName}`,
   BusRouteShape: (City: string, RouteName: string) =>
     `${baseURL}/Bus/Shape/City/${City}/${RouteName}`,
+  BusRouteBusRealTimeByFrequency: (City: string, RouteName: string) =>
+    `${baseURL}/Bus/RealTimeByFrequency/City/${City}/${RouteName}`,
 };
 export default apiList;

@@ -22,7 +22,7 @@ import StepLabel from "@mui/material/StepLabel";
 import StepContent from "@mui/material/StepContent";
 
 import { testStops, testBusStop } from "services/bus";
-import { StopType } from "types/bus";
+import { BusN1EstimateTimeDataType, StopStatusEnum } from "types/bus";
 
 const stops = testStops[0].Stops;
 const busNearStop = testBusStop[0];
@@ -30,7 +30,7 @@ const busNearStop = testBusStop[0];
 const SearchResultCard = muiStyled(Card)(({ theme }) => ({ flexGrow: 1 }));
 
 type Props = {
-  stops?: Array<StopType>;
+  stops?: Array<BusN1EstimateTimeDataType>;
   Direction: number;
   setDirection: (direction: number) => void;
 };
@@ -73,12 +73,23 @@ const BusDetailRealTimeStatus: React.FC<Props> = ({
       <BusDetailRealTimeStatusBody>
         <Stepper orientation="vertical">
           {stops.map((stop, index) => {
-            const nearStop = stop.StopSequence === busNearStop.StopSequence;
+            const EstimateTimeMinute = Math.floor(stop.EstimateTime / 60);
+            const nearStop = EstimateTimeMinute === 0;
 
             return (
-              <Step key={stop.StationID} active={nearStop}>
+              <Step key={stop.StopID} active={nearStop}>
                 <StepLabel>
-                  {nearStop && <ColorText color="#F66A4B">即將進站</ColorText>}{" "}
+                  {stop.StopStatus !== 0 ? (
+                    StopStatusEnum[stop.StopStatus]
+                  ) : (
+                    <>
+                      {nearStop ? (
+                        <ColorText color="#F66A4B">即將進站</ColorText>
+                      ) : (
+                        `${EstimateTimeMinute} 分`
+                      )}
+                    </>
+                  )}{" "}
                   {stop.StopName.Zh_tw}
                 </StepLabel>
               </Step>
