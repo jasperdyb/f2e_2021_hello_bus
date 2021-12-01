@@ -32,11 +32,13 @@ import {
 import { faClock } from "@fortawesome/free-solid-svg-icons/faClock";
 import { faArrowsAltH } from "@fortawesome/free-solid-svg-icons/faArrowsAltH";
 
+import { BusScheduleDataType } from "types/bus";
 import {
   testRouteInfo,
   useGetBusRouteStops,
   useGetBusRouteInfo,
   useGetBusRouteShape,
+  useGetBusRouteSchedule,
   parseBusRouteData,
 } from "services/bus";
 
@@ -86,6 +88,29 @@ const BusStatusDetail = () => {
     [routes]
   );
 
+  const {
+    schedules,
+    isLoading: isScheduleLoading,
+    isError: isScheduleError,
+  } = useGetBusRouteSchedule(city, route);
+
+  const Schedules: {
+    toDestinationRoute: BusScheduleDataType;
+    toDepartureRoute: BusScheduleDataType;
+  } = React.useMemo(
+    () =>
+      schedules && !isScheduleLoading && !isScheduleError && schedules.length
+        ? {
+            toDestinationRoute: schedules.find((s) => s.Direction === 0),
+            toDepartureRoute: schedules.find((s) => s.Direction === 1),
+          }
+        : {
+            toDestinationRoute: [],
+            toDepartureRoute: [],
+          },
+    [schedules, Direction]
+  );
+
   React.useEffect(() => {
     console.log(city);
     console.log(route);
@@ -109,7 +134,11 @@ const BusStatusDetail = () => {
                   alignItems={"center"}
                   spacing={1}
                 >
-                  <BusTimeTableDialog />
+                  <BusTimeTableDialog
+                    Schedules={Schedules}
+                    DepartureStopName={RoutInfo.DepartureStopNameZh}
+                    DestinationStopName={RoutInfo.DestinationStopNameZh}
+                  />
                   <Typography typography={"h2"}>公車班表</Typography>
                 </Stack>
               </Stack>

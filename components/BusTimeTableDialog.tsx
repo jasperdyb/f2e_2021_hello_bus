@@ -1,5 +1,6 @@
 import type { NextPage } from "next";
 import type { ReactElement } from "react";
+import React from "react";
 import styled from "styled-components";
 import Image from "next/image";
 import { CityOptions } from "types/bus";
@@ -24,28 +25,73 @@ import HelloBus_dark from "@img/HelloBus_dark.png";
 
 import { faClock } from "@fortawesome/free-solid-svg-icons/faClock";
 import { testBusTimeTable } from "services/bus";
+import { BusScheduleDataType } from "types/bus";
 
-const toDestinationRoute = testBusTimeTable[0];
-const toDestinationRouteWeekDay = toDestinationRoute.Frequencys.filter(
-  (t) => !(t.ServiceDay.Sunday || t.ServiceDay.Saturday)
-);
+type Props = {
+  Schedules: {
+    toDestinationRoute: BusScheduleDataType;
+    toDepartureRoute: BusScheduleDataType;
+  };
+  DepartureStopName: string;
+  DestinationStopName: string;
+};
 
-const toDestinationRouteWeekEnd = toDestinationRoute.Frequencys.filter(
-  (t) => t.ServiceDay.Sunday || t.ServiceDay.Saturday
-);
-
-const toDepartureRoute = testBusTimeTable[1];
-const toDepartureRouteWeekDay = toDepartureRoute.Frequencys.filter(
-  (t) => !(t.ServiceDay.Sunday || t.ServiceDay.Saturday)
-);
-
-const toDepartureRouteWeekEnd = toDepartureRoute.Frequencys.filter(
-  (t) => t.ServiceDay.Sunday || t.ServiceDay.Saturday
-);
-
-const BusTimeTableDialog = () => {
+const BusTimeTableDialog: React.FC<Props> = ({
+  Schedules,
+  DepartureStopName,
+  DestinationStopName,
+}) => {
   const theme = useTheme();
   const onMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
+  const toDestinationRouteWeekDay = React.useMemo(
+    () =>
+      Schedules &&
+      Schedules.toDestinationRoute &&
+      Schedules.toDestinationRoute.Frequencys
+        ? Schedules.toDestinationRoute.Frequencys.filter(
+            (t) => !(t.ServiceDay.Sunday || t.ServiceDay.Saturday)
+          )
+        : [],
+    [Schedules]
+  );
+
+  const toDestinationRouteWeekEnd = React.useMemo(
+    () =>
+      Schedules &&
+      Schedules.toDestinationRoute &&
+      Schedules.toDestinationRoute.Frequencys
+        ? Schedules.toDestinationRoute.Frequencys.filter(
+            (t) => t.ServiceDay.Sunday || t.ServiceDay.Saturday
+          )
+        : [],
+    [Schedules]
+  );
+
+  const toDepartureRouteWeekDay = React.useMemo(
+    () =>
+      Schedules &&
+      Schedules.toDepartureRoute &&
+      Schedules.toDepartureRoute.Frequencys
+        ? Schedules.toDepartureRoute.Frequencys.filter(
+            (t) => !(t.ServiceDay.Sunday || t.ServiceDay.Saturday)
+          )
+        : [],
+    [Schedules]
+  );
+
+  const toDepartureRouteWeekEnd = React.useMemo(
+    () =>
+      Schedules &&
+      Schedules.toDepartureRoute &&
+      Schedules.toDepartureRoute.Frequencys
+        ? Schedules.toDepartureRoute.Frequencys.filter(
+            (t) => t.ServiceDay.Sunday || t.ServiceDay.Saturday
+          )
+        : [],
+    [Schedules]
+  );
+
   return (
     <MainDialog
       title="5053 班次表"
@@ -63,6 +109,8 @@ const BusTimeTableDialog = () => {
               toDestinationRoute: toDestinationRouteWeekDay,
               toDepartureRoute: toDepartureRouteWeekDay,
             }}
+            DepartureStopName={DepartureStopName}
+            DestinationStopName={DestinationStopName}
           ></BusTimeTable>
         </Grid>
         <Grid item sm={6}>
@@ -72,6 +120,8 @@ const BusTimeTableDialog = () => {
               toDestinationRoute: toDestinationRouteWeekEnd,
               toDepartureRoute: toDepartureRouteWeekEnd,
             }}
+            DepartureStopName={DepartureStopName}
+            DestinationStopName={DestinationStopName}
           ></BusTimeTable>
         </Grid>
       </BusTimeTableContainer>

@@ -33,9 +33,17 @@ import { Location } from "types/geolocation";
 interface Props {
   title?: string;
   route?: { toDestinationRoute: any; toDepartureRoute: any };
+
+  DepartureStopName: string;
+  DestinationStopName: string;
 }
 
-const BusTimeTable: React.FC<Props> = ({ title, route }) => {
+const BusTimeTable: React.FC<Props> = ({
+  title,
+  route,
+  DepartureStopName,
+  DestinationStopName,
+}) => {
   const router = useRouter();
 
   const toDestinationTimeTable = useMemo(
@@ -56,11 +64,11 @@ const BusTimeTable: React.FC<Props> = ({ title, route }) => {
           <Grid item sm={6}>
             <BusTimeTableList>
               <BusTimeListHeader>
-                <Typography>
-                  <ColorText>
-                    往 {testRouteInfo.DestinationStopNameZh}
-                  </ColorText>
-                </Typography>
+                {DestinationStopName && (
+                  <Typography>
+                    <ColorText>往 {DestinationStopName}</ColorText>
+                  </Typography>
+                )}
               </BusTimeListHeader>
               {toDestinationTimeTable.map((item, index) => (
                 <BusTimeListItem key={index} index={index}>
@@ -72,9 +80,11 @@ const BusTimeTable: React.FC<Props> = ({ title, route }) => {
           <Grid item sm={6}>
             <BusTimeTableList>
               <BusTimeListHeader>
-                <Typography>
-                  <ColorText>往 {testRouteInfo.DepartureStopNameZh}</ColorText>
-                </Typography>
+                {DepartureStopName && (
+                  <Typography>
+                    <ColorText>往 {DepartureStopName}</ColorText>
+                  </Typography>
+                )}
               </BusTimeListHeader>
               {toDepartureTimeTable.map((item, index) => (
                 <BusTimeListItem key={index} index={index}>
