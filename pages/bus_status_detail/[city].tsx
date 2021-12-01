@@ -38,10 +38,22 @@ import {
   useGetBusRouteInfo,
   useGetBusRouteShape,
   useGetBusRouteSchedule,
-  parseBusRouteData,
   useGetBusRouteEstimatedTimeOfArrival,
   useGetBusRouteBusRealTimeByFrequency,
+  findNearestStop,
+  parseBusRouteData,
 } from "services/bus";
+
+import {
+  PointType,
+  BusIndexDataType,
+  BusStopsDataType,
+  BusRouteDataType,
+  BusShapeDataType,
+  BusScheduleDataType,
+  BusN1EstimateTimeDataType,
+  BusA1DataType,
+} from "types/bus";
 
 const BusStatusDetail = () => {
   const router = useRouter();
@@ -49,6 +61,8 @@ const BusStatusDetail = () => {
   const theme = useTheme();
   const onMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const [Direction, setDirection] = React.useState(0);
+  const [ZoomInStop, setZoomInStop] =
+    React.useState<BusN1EstimateTimeDataType>();
 
   const {
     stops,
@@ -77,6 +91,16 @@ const BusStatusDetail = () => {
         : [],
     [estimatedTimeOfArrival, Direction]
   );
+
+  React.useEffect(() => {
+    const nearestStop: BusN1EstimateTimeDataType = findNearestStop(
+      EstimatedTimeOfArrival
+    );
+
+    if (nearestStop) {
+      setZoomInStop(nearestStop);
+    }
+  }, [EstimatedTimeOfArrival]);
 
   const {
     routeShapes,
@@ -137,11 +161,6 @@ const BusStatusDetail = () => {
     [buses, Direction]
   );
 
-  React.useEffect(() => {
-    console.log("=== EstimatedTimeOfArrival");
-    console.log(EstimatedTimeOfArrival);
-  }, [EstimatedTimeOfArrival]);
-
   return (
     <>
       <Navbar icon={HelloBus_dark} navTextColor="primary" />
@@ -196,6 +215,7 @@ const BusStatusDetail = () => {
           stops={Stops}
           routeShape={Shapes}
           buses={Buses}
+          ZoomInStop={ZoomInStop}
         />
       </BusStatusDetailContainer>
     </>

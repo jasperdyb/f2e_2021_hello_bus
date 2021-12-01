@@ -21,8 +21,10 @@ import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
 import StepContent from "@mui/material/StepContent";
 
-import { testStops, testBusStop } from "services/bus";
+import { testStops, testBusStop, findNearestStop } from "services/bus";
 import { BusN1EstimateTimeDataType, StopStatusEnum } from "types/bus";
+
+import { gsap } from "gsap";
 
 const stops = testStops[0].Stops;
 const busNearStop = testBusStop[0];
@@ -41,6 +43,20 @@ const BusDetailRealTimeStatus: React.FC<Props> = ({
   setDirection,
 }) => {
   const router = useRouter();
+  const stepperRef = React.useRef();
+
+  useEffect(() => {
+    if (stops) {
+      const nearestStop: BusN1EstimateTimeDataType = findNearestStop(stops);
+
+      if (nearestStop) {
+        gsap.to(stepperRef.current, {
+          duration: 2,
+          scrollTo: nearestStop.StopID,
+        });
+      }
+    }
+  }, [stops]);
 
   return (
     <BusDetailRealTimeStatusContainer>
@@ -70,14 +86,14 @@ const BusDetailRealTimeStatus: React.FC<Props> = ({
           ></ButtonAnimatedBus>
         </Grid>
       </BusDetailRealTimeStatusHeader>
-      <BusDetailRealTimeStatusBody>
+      <BusDetailRealTimeStatusBody ref={stepperRef}>
         <Stepper orientation="vertical">
           {stops.map((stop, index) => {
             const EstimateTimeMinute = Math.floor(stop.EstimateTime / 60);
             const nearStop = EstimateTimeMinute === 0;
 
             return (
-              <Step key={stop.StopID} active={nearStop}>
+              <Step id={stop.StopID} key={stop.StopID} active={nearStop}>
                 <StepLabel>
                   {stop.StopStatus !== 0 ? (
                     StopStatusEnum[stop.StopStatus]
@@ -118,55 +134,7 @@ const BusDetailRealTimeStatusContainer = muiStyled(Stack)(({ theme }) => ({
 
 const BusDetailRealTimeStatusBody = muiStyled(Grid)(({ theme }) => ({
   width: "100%",
-  overflow: "auto",
+  overflow: "scroll",
 }));
-
-const steps = [
-  {
-    label: "Step",
-  },
-  {
-    label: "Step",
-  },
-  {
-    label: "Step",
-  },
-  {
-    label: "Step",
-  },
-  {
-    label: "Step",
-  },
-  {
-    label: "Step",
-  },
-  {
-    label: "Step",
-  },
-  {
-    label: "Step",
-  },
-  {
-    label: "Step",
-  },
-  {
-    label: "Step",
-  },
-  {
-    label: "Step",
-  },
-  {
-    label: "Step",
-  },
-  {
-    label: "Step",
-  },
-  {
-    label: "Step",
-  },
-  {
-    label: "Step",
-  },
-];
 
 export default BusDetailRealTimeStatus;

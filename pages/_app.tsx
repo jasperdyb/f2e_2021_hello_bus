@@ -1,6 +1,7 @@
 import type { AppProps } from "next/app";
 
 import type { ReactElement, ReactNode } from "react";
+import React from "react";
 import type { NextPage } from "next";
 
 import { createGlobalStyle } from "styled-components";
@@ -16,6 +17,9 @@ import {
 import { SceneSpotContextProvider } from "context/sceneSpot";
 import { GeolocationContextProvider } from "context/geolocation";
 import { mainTheme } from "public/theme/main";
+
+import { gsap } from "gsap";
+import { ScrollToPlugin } from "gsap/ScrollToPlugin";
 
 const GlobalStyle = createGlobalStyle`
 html{ 
@@ -36,6 +40,13 @@ type AppPropsWithLayout = AppProps & {
 
 function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   const getLayout = Component.getLayout ?? ((page) => page);
+
+  React.useEffect(() => {
+    if (window) {
+      gsap.registerPlugin(ScrollToPlugin);
+    }
+  }, [window]);
+
   return (
     <>
       <CssBaseline />

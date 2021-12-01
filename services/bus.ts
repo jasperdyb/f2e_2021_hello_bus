@@ -6426,6 +6426,26 @@ export const parsePointType = (point: PointType): google.maps.LatLngLiteral => {
   };
 };
 
+export const findNearestStop = (stops: Array<BusN1EstimateTimeDataType>) => {
+  let nearestStop: BusN1EstimateTimeDataType = null;
+
+  nearestStop = stops
+    .filter((s) => s.StopStatus === 0)
+    .find((s) => Math.floor(s.EstimateTime / 60) === 0);
+  if (!nearestStop) {
+    let lowestEstimateTime = Number.POSITIVE_INFINITY;
+    for (const stop of stops) {
+      if (stop.EstimateTime < lowestEstimateTime) {
+        lowestEstimateTime = stop.EstimateTime;
+        nearestStop = stop;
+      }
+    }
+  }
+
+  console.log("=== nearestStop ===", nearestStop);
+  return nearestStop;
+};
+
 const fetcher = (
   url: string,
   $top?: number,

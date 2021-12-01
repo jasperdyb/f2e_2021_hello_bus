@@ -35,12 +35,12 @@ import { faCircle } from "@fortawesome/free-solid-svg-icons/faCircle";
 import { faCircle as farCircle } from "@fortawesome/free-regular-svg-icons/faCircle";
 
 import {
+  parsePointType,
   parseBusRouteData,
   testBus,
   testRoute,
-  parsePointType,
 } from "services/bus";
-import { StopType, BusA1DataType } from "types/bus";
+import { StopType, BusA1DataType, BusN1EstimateTimeDataType } from "types/bus";
 
 const lat = testBus[0].BusPosition.PositionLat;
 const lng = testBus[0].BusPosition.PositionLon;
@@ -68,12 +68,14 @@ type Props = {
   buses?: Array<BusA1DataType>;
   stops?: Array<StopType>;
   routeShape?: Array<google.maps.LatLngLiteral>;
+  ZoomInStop?: BusN1EstimateTimeDataType;
 };
 
 const BusDetailRealTimeStatusMap: React.FC<Props> = ({
   stops,
   buses,
   routeShape,
+  ZoomInStop,
 }) => {
   const router = useRouter();
 
@@ -82,6 +84,15 @@ const BusDetailRealTimeStatusMap: React.FC<Props> = ({
     lng: 0,
   });
 
+  useEffect(() => {
+    if (ZoomInStop) {
+      const stop = stops.find((s) => s.StopID === ZoomInStop.StopID);
+      if (stop) {
+        setMapCenter(parsePointType(stop.StopPosition));
+      }
+    }
+  }, [ZoomInStop]);
+
   const [ShowStops, setShowStops] = useState(false);
 
   const { isLoaded } = useJsApiLoader({
@@ -89,9 +100,7 @@ const BusDetailRealTimeStatusMap: React.FC<Props> = ({
     googleMapsApiKey: process.env.GOOGLE_MAP_API_KEY,
   });
 
-  const onLoad = React.useCallback(function callback(map) {
-    setMapCenter({ lat, lng });
-  }, []);
+  const onLoad = React.useCallback(function callback(map) {}, []);
 
   const onUnmount = React.useCallback(function callback(map) {}, []);
 
