@@ -19,7 +19,7 @@ import { GeolocationContextProvider } from "context/geolocation";
 import { mainTheme } from "public/theme/main";
 
 import { gsap } from "gsap";
-import { ScrollToPlugin } from "gsap/ScrollToPlugin";
+import { ScrollToPlugin } from "gsap/dist/ScrollToPlugin";
 
 const GlobalStyle = createGlobalStyle`
 html{ 
@@ -40,13 +40,7 @@ type AppPropsWithLayout = AppProps & {
 
 function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   const getLayout = Component.getLayout ?? ((page) => page);
-
-  React.useEffect(() => {
-    if (window) {
-      gsap.registerPlugin(ScrollToPlugin);
-    }
-  }, [window]);
-
+  gsap.registerPlugin(ScrollToPlugin);
   return (
     <>
       <CssBaseline />

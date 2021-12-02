@@ -49,10 +49,12 @@ const BusDetailRealTimeStatus: React.FC<Props> = ({
     if (stops) {
       const nearestStop: BusN1EstimateTimeDataType = findNearestStop(stops);
 
-      if (nearestStop) {
+      if (nearestStop?.StopID) {
+        console.log("=== scrollTo ===", `Stop${nearestStop.StopID}`);
         gsap.to(stepperRef.current, {
           duration: 2,
-          scrollTo: nearestStop.StopID,
+          scrollTo: `#Stop${nearestStop.StopID}`,
+          autoKill: true,
         });
       }
     }
@@ -86,14 +88,14 @@ const BusDetailRealTimeStatus: React.FC<Props> = ({
           ></ButtonAnimatedBus>
         </Grid>
       </BusDetailRealTimeStatusHeader>
-      <BusDetailRealTimeStatusBody ref={stepperRef}>
-        <Stepper orientation="vertical">
+      <BusDetailRealTimeStatusBody>
+        <Stepper orientation="vertical" ref={stepperRef}>
           {stops.map((stop, index) => {
             const EstimateTimeMinute = Math.floor(stop.EstimateTime / 60);
             const nearStop = EstimateTimeMinute === 0;
 
             return (
-              <Step id={stop.StopID} key={stop.StopID} active={nearStop}>
+              <Step id={`Stop${stop.StopID}`} key={index} active={nearStop}>
                 <StepLabel>
                   {stop.StopStatus !== 0 ? (
                     StopStatusEnum[stop.StopStatus]
@@ -134,7 +136,7 @@ const BusDetailRealTimeStatusContainer = muiStyled(Stack)(({ theme }) => ({
 
 const BusDetailRealTimeStatusBody = muiStyled(Grid)(({ theme }) => ({
   width: "100%",
-  overflow: "scroll",
+  overflow: "auto",
 }));
 
 export default BusDetailRealTimeStatus;
