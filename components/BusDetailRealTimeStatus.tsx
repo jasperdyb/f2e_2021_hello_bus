@@ -54,7 +54,6 @@ const BusDetailRealTimeStatus: React.FC<Props> = ({
         gsap.to(stepperRef.current, {
           duration: 2,
           scrollTo: `#Stop${nearestStop.StopID}`,
-          autoKill: true,
         });
       }
     }
@@ -88,8 +87,8 @@ const BusDetailRealTimeStatus: React.FC<Props> = ({
           ></ButtonAnimatedBus>
         </Grid>
       </BusDetailRealTimeStatusHeader>
-      <BusDetailRealTimeStatusBody>
-        <Stepper orientation="vertical" ref={stepperRef}>
+      <BusDetailRealTimeStatusBody ref={stepperRef}>
+        <Stepper orientation="vertical">
           {stops.map((stop, index) => {
             const EstimateTimeMinute = Math.floor(stop.EstimateTime / 60);
             const nearStop = EstimateTimeMinute === 0;
