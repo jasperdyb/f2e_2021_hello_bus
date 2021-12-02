@@ -18,7 +18,7 @@ import { faExchangeAlt } from "@fortawesome/free-solid-svg-icons/faExchangeAlt";
 
 import Stepper from "@mui/material/Stepper";
 import Step from "@mui/material/Step";
-import StepLabel from "@mui/material/StepLabel";
+import StepLabel, { stepLabelClasses } from "@mui/material/StepLabel";
 import StepContent from "@mui/material/StepContent";
 
 import { testStops, testBusStop, findNearestStop } from "services/bus";
@@ -26,21 +26,18 @@ import { BusN1EstimateTimeDataType, StopStatusEnum } from "types/bus";
 
 import { gsap } from "gsap";
 
-const stops = testStops[0].Stops;
-const busNearStop = testBusStop[0];
-
-const SearchResultCard = muiStyled(Card)(({ theme }) => ({ flexGrow: 1 }));
-
 type Props = {
   stops?: Array<BusN1EstimateTimeDataType>;
   Direction: number;
   setDirection: (direction: number) => void;
+  setZoomInStop: (stop: BusN1EstimateTimeDataType) => void;
 };
 
 const BusDetailRealTimeStatus: React.FC<Props> = ({
   stops,
   Direction,
   setDirection,
+  setZoomInStop,
 }) => {
   const router = useRouter();
   const stepperRef = React.useRef();
@@ -95,7 +92,11 @@ const BusDetailRealTimeStatus: React.FC<Props> = ({
 
             return (
               <Step id={`Stop${stop.StopID}`} key={index} active={nearStop}>
-                <StepLabel>
+                <BusStopStepLabel
+                  onClick={() => {
+                    setZoomInStop(stop);
+                  }}
+                >
                   {stop.StopStatus !== 0 ? (
                     StopStatusEnum[stop.StopStatus]
                   ) : (
@@ -108,7 +109,7 @@ const BusDetailRealTimeStatus: React.FC<Props> = ({
                     </>
                   )}{" "}
                   {stop.StopName.Zh_tw}
-                </StepLabel>
+                </BusStopStepLabel>
               </Step>
             );
           })}
@@ -136,6 +137,11 @@ const BusDetailRealTimeStatusContainer = muiStyled(Stack)(({ theme }) => ({
 const BusDetailRealTimeStatusBody = muiStyled(Grid)(({ theme }) => ({
   width: "100%",
   overflow: "auto",
+}));
+const BusStopStepLabel = muiStyled(StepLabel)(({ theme }) => ({
+  [`& .${stepLabelClasses.label}`]: {
+    cursor: "pointer",
+  },
 }));
 
 export default BusDetailRealTimeStatus;

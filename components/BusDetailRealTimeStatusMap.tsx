@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { useRouter } from "next/router";
 import { styled as muiStyled } from "@mui/material/styles";
 import { useForm, useWatch, Controller, SubmitHandler } from "react-hook-form";
+import usePrevious from "helpers/hooks/usePrevious";
 
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
@@ -23,6 +24,7 @@ import {
   Marker,
   Polyline,
   useJsApiLoader,
+  useGoogleMap,
 } from "@react-google-maps/api";
 
 import {
@@ -68,37 +70,53 @@ type Props = {
   buses?: Array<BusA1DataType>;
   stops?: Array<StopType>;
   routeShape?: Array<google.maps.LatLngLiteral>;
+  InitStop?: BusN1EstimateTimeDataType;
   ZoomInStop?: BusN1EstimateTimeDataType;
+  zoom: number;
+  Direction: number;
 };
 
 const BusDetailRealTimeStatusMap: React.FC<Props> = ({
   stops,
   buses,
   routeShape,
+  InitStop,
   ZoomInStop,
+  Direction = 0,
 }) => {
   const router = useRouter();
-
-  const [MapCenter, setMapCenter] = useState({
+  const [MapCenter, setMapCenter] = useState<google.maps.LatLngLiteral>({
     lat: 0,
     lng: 0,
   });
+  const { isLoaded } = useJsApiLoader({
+    id: "google-map-script",
+    googleMapsApiKey: process.env.GOOGLE_MAP_API_KEY,
+  });
+  const [Zoom, setZoom] = useState(14);
+
+  const PrevDirection = usePrevious(Direction);
+  useEffect(() => {
+    if (isLoaded && InitStop && Direction !== PrevDirection) {
+      const stop = stops.find((s) => s.StopID === InitStop.StopID);
+      if (stop) {
+        setMapCenter(parsePointType(stop.StopPosition));
+        setZoom(14);
+      }
+    }
+  }, [isLoaded, InitStop, Direction]);
 
   useEffect(() => {
-    if (ZoomInStop) {
+    if (isLoaded && ZoomInStop) {
       const stop = stops.find((s) => s.StopID === ZoomInStop.StopID);
       if (stop) {
         setMapCenter(parsePointType(stop.StopPosition));
+        setZoom(17);
       }
     }
   }, [ZoomInStop]);
 
   const [ShowStops, setShowStops] = useState(false);
-
-  const { isLoaded } = useJsApiLoader({
-    id: "google-map-script",
-    googleMapsApiKey: process.env.GOOGLE_MAP_API_KEY,
-  });
 
   const onLoad = React.useCallback(function callback(map) {}, []);
 
@@ -118,8 +136,8 @@ const BusDetailRealTimeStatusMap: React.FC<Props> = ({
   return isLoaded ? (
     <GoogleMap
       mapContainerStyle={containerStyle}
-      center={MapCenter}
-      zoom={14}
+      // center={MapCenter}
+      zoom={Zoom}
       onLoad={onLoad}
       onUnmount={onUnmount}
       options={{
@@ -133,6 +151,7 @@ const BusDetailRealTimeStatusMap: React.FC<Props> = ({
         keyboardShortcuts: false,
       }}
     >
+      <PanningComponent MapCenter={MapCenter} />
       <SwitchCard>
         <SwitchCardContent>
           <SwitchLabel
@@ -240,6 +259,21 @@ const FontAwesomeMarker: React.FC<{
     }}
   />
 );
+
+const PanningComponent: React.FC<{ MapCenter: google.maps.LatLngLiteral }> = ({
+  MapCenter,
+}) => {
+  const map = useGoogleMap();
+
+  React.useEffect(() => {
+    if (map && MapCenter) {
+      console.log("map pan to", MapCenter);
+      map.panTo(MapCenter);
+    }
+  }, [map, MapCenter]);
+
+  return null;
+};
 
 const containerStyle = {
   width: "50%",

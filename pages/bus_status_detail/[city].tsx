@@ -55,12 +55,22 @@ import {
   BusA1DataType,
 } from "types/bus";
 
+function usePrevious(value) {
+  const ref = React.useRef();
+  React.useEffect(() => {
+    ref.current = value;
+  }, [value]);
+  return ref.current;
+}
+
 const BusStatusDetail = () => {
   const router = useRouter();
   const { city, route } = router.query;
   const theme = useTheme();
   const onMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const [Direction, setDirection] = React.useState(0);
+  const PrevDirection = usePrevious(Direction);
+  const [InitStop, setInitStop] = React.useState<BusN1EstimateTimeDataType>();
   const [ZoomInStop, setZoomInStop] =
     React.useState<BusN1EstimateTimeDataType>();
 
@@ -98,7 +108,7 @@ const BusStatusDetail = () => {
     );
 
     if (nearestStop) {
-      setZoomInStop(nearestStop);
+      setInitStop(nearestStop);
     }
   }, [EstimatedTimeOfArrival]);
 
@@ -210,12 +220,17 @@ const BusStatusDetail = () => {
           stops={EstimatedTimeOfArrival}
           Direction={Direction}
           setDirection={setDirection}
+          setZoomInStop={(stop: BusN1EstimateTimeDataType) =>
+            setZoomInStop(stop)
+          }
         />
         <BusDetailRealTimeStatusMap
           stops={Stops}
           routeShape={Shapes}
           buses={Buses}
+          InitStop={InitStop}
           ZoomInStop={ZoomInStop}
+          Direction={Direction}
         />
       </BusStatusDetailContainer>
     </>
