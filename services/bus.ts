@@ -6442,7 +6442,7 @@ export const findNearestStop = (stops: Array<BusN1EstimateTimeDataType>) => {
     }
   }
 
-  console.log("=== nearestStop ===", nearestStop);
+  // console.log("=== nearestStop ===", nearestStop);
   return nearestStop;
 };
 
@@ -6491,13 +6491,13 @@ export function useGetBusRouteIndex(
   isLoading: boolean;
   isError: boolean;
 } {
-  console.log("==== useGetBusRouteIndex ===");
+  // console.log("==== useGetBusRouteIndex ===");
 
   const url = React.useMemo(
     () => (City ? apiList.BusIndex(City) : null),
     [City]
   );
-  console.log("==== useGetBusRouteIndex url ===", url);
+  // console.log("==== useGetBusRouteIndex url ===", url);
 
   const { data, error, mutate } = useSWR(
     [url, options?.$top, options?.$filter, busRouteIndexSelect],
@@ -6511,8 +6511,8 @@ export function useGetBusRouteIndex(
     }
   );
 
-  console.log("==== useGetBusRouteIndex data ===", data);
-  console.log("==== useGetBusRouteIndex error ===", error);
+  // console.log("==== useGetBusRouteIndex data ===", data);
+  // console.log("==== useGetBusRouteIndex error ===", error);
   return {
     buses: data,
     isLoading: !error && !data,
@@ -6528,13 +6528,13 @@ export function useGetBusRouteStops(
   isLoading: boolean;
   isError: boolean;
 } {
-  console.log("==== useGetBusRouteStops ===");
+  // console.log("==== useGetBusRouteStops ===");
 
   const url = React.useMemo(
     () => (City && RouteName ? apiList.BusRouteStops(City, RouteName) : null),
     [City, RouteName]
   );
-  console.log("==== useGetBusRouteStops url ===", url);
+  // console.log("==== useGetBusRouteStops url ===", url);
 
   const { data, error } = useSWR(
     url,
@@ -6548,8 +6548,8 @@ export function useGetBusRouteStops(
     }
   );
 
-  console.log("==== useGetBusRouteStops data ===", data);
-  console.log("==== useGetBusRouteStops error ===", error);
+  // console.log("==== useGetBusRouteStops data ===", data);
+  // console.log("==== useGetBusRouteStops error ===", error);
   return {
     stops: data,
     isLoading: !error && !data,
@@ -6565,13 +6565,13 @@ export function useGetBusRouteInfo(
   isLoading: boolean;
   isError: boolean;
 } {
-  console.log("==== useGetBusRouteInfo ===");
+  // console.log("==== useGetBusRouteInfo ===");
 
   const url = React.useMemo(
     () => (City && RouteName ? apiList.BusRouteInfo(City, RouteName) : null),
     [City, RouteName]
   );
-  console.log("==== useGetBusRouteInfo url ===", url);
+  // console.log("==== useGetBusRouteInfo url ===", url);
 
   const { data, error } = useSWR(
     url,
@@ -6585,8 +6585,8 @@ export function useGetBusRouteInfo(
     }
   );
 
-  console.log("==== useGetBusRouteInfo data ===", data);
-  console.log("==== useGetBusRouteInfo error ===", error);
+  // console.log("==== useGetBusRouteInfo data ===", data);
+  // console.log("==== useGetBusRouteInfo error ===", error);
   return {
     routes: data,
     isLoading: !error && !data,
@@ -6602,13 +6602,13 @@ export function useGetBusRouteShape(
   isLoading: boolean;
   isError: boolean;
 } {
-  console.log("==== useGetBusRouteShape ===");
+  // console.log("==== useGetBusRouteShape ===");
 
   const url = React.useMemo(
     () => (City && RouteName ? apiList.BusRouteShape(City, RouteName) : null),
     [City, RouteName]
   );
-  console.log("==== useGetBusRouteShape url ===", url);
+  // console.log("==== useGetBusRouteShape url ===", url);
 
   const { data, error } = useSWR(
     url,
@@ -6622,8 +6622,8 @@ export function useGetBusRouteShape(
     }
   );
 
-  console.log("==== useGetBusRouteShape data ===", data);
-  console.log("==== useGetBusRouteShape error ===", error);
+  // console.log("==== useGetBusRouteShape data ===", data);
+  // console.log("==== useGetBusRouteShape error ===", error);
   return {
     routeShapes: data,
     isLoading: !error && !data,
@@ -6639,14 +6639,14 @@ export function useGetBusRouteSchedule(
   isLoading: boolean;
   isError: boolean;
 } {
-  console.log("==== useGetBusRouteSchedule ===");
+  // console.log("==== useGetBusRouteSchedule ===");
 
   const url = React.useMemo(
     () =>
       City && RouteName ? apiList.BusRouteSchedule(City, RouteName) : null,
     [City, RouteName]
   );
-  console.log("==== useGetBusRouteSchedule url ===", url);
+  // console.log("==== useGetBusRouteSchedule url ===", url);
 
   const { data, error } = useSWR(
     url,
@@ -6660,8 +6660,8 @@ export function useGetBusRouteSchedule(
     }
   );
 
-  console.log("==== useGetBusRouteSchedule data ===", data);
-  console.log("==== useGetBusRouteSchedule error ===", error);
+  // console.log("==== useGetBusRouteSchedule data ===", data);
+  // console.log("==== useGetBusRouteSchedule error ===", error);
   return {
     schedules: data,
     isLoading: !error && !data,
@@ -6677,7 +6677,7 @@ export function useGetBusRouteEstimatedTimeOfArrival(
   isLoading: boolean;
   isError: boolean;
 } {
-  console.log("==== useGetBusRouteEstimatedTimeOfArrival ===");
+  // console.log("==== useGetBusRouteEstimatedTimeOfArrival ===");
 
   const url = React.useMemo(
     () =>
@@ -6686,7 +6686,7 @@ export function useGetBusRouteEstimatedTimeOfArrival(
         : null,
     [City, RouteName]
   );
-  console.log("==== useGetBusRouteEstimatedTimeOfArrival url ===", url);
+  // console.log("==== useGetBusRouteEstimatedTimeOfArrival url ===", url);
 
   const { data, error } = useSWR(
     url,
@@ -6700,8 +6700,8 @@ export function useGetBusRouteEstimatedTimeOfArrival(
     }
   );
 
-  console.log("==== useGetBusRouteEstimatedTimeOfArrival data ===", data);
-  console.log("==== useGetBusRouteEstimatedTimeOfArrival error ===", error);
+  // console.log("==== useGetBusRouteEstimatedTimeOfArrival data ===", data);
+  // console.log("==== useGetBusRouteEstimatedTimeOfArrival error ===", error);
   return {
     estimatedTimeOfArrival: data,
     isLoading: !error && !data,
@@ -6717,7 +6717,7 @@ export function useGetBusRouteBusRealTimeByFrequency(
   isLoading: boolean;
   isError: boolean;
 } {
-  console.log("==== useGetBusRouteBusRealTimeByFrequency ===");
+  // console.log("==== useGetBusRouteBusRealTimeByFrequency ===");
 
   const url = React.useMemo(
     () =>
@@ -6726,7 +6726,7 @@ export function useGetBusRouteBusRealTimeByFrequency(
         : null,
     [City, RouteName]
   );
-  console.log("==== useGetBusRouteBusRealTimeByFrequency url ===", url);
+  // console.log("==== useGetBusRouteBusRealTimeByFrequency url ===", url);
 
   const { data, error } = useSWR(
     url,
@@ -6740,8 +6740,8 @@ export function useGetBusRouteBusRealTimeByFrequency(
     }
   );
 
-  console.log("==== useGetBusRouteBusRealTimeByFrequency data ===", data);
-  console.log("==== useGetBusRouteBusRealTimeByFrequency error ===", error);
+  // console.log("==== useGetBusRouteBusRealTimeByFrequency data ===", data);
+  // console.log("==== useGetBusRouteBusRealTimeByFrequency error ===", error);
   return {
     buses: data,
     isLoading: !error && !data,

@@ -28,6 +28,7 @@ import { gsap } from "gsap";
 
 type Props = {
   stops?: Array<BusN1EstimateTimeDataType>;
+  InitStop: BusN1EstimateTimeDataType;
   Direction: number;
   setDirection: (direction: number) => void;
   setZoomInStop: (stop: BusN1EstimateTimeDataType) => void;
@@ -35,6 +36,7 @@ type Props = {
 
 const BusDetailRealTimeStatus: React.FC<Props> = ({
   stops,
+  InitStop,
   Direction,
   setDirection,
   setZoomInStop,
@@ -43,18 +45,14 @@ const BusDetailRealTimeStatus: React.FC<Props> = ({
   const stepperRef = React.useRef();
 
   useEffect(() => {
-    if (stops) {
-      const nearestStop: BusN1EstimateTimeDataType = findNearestStop(stops);
-
-      if (nearestStop?.StopID) {
-        console.log("=== scrollTo ===", `Stop${nearestStop.StopID}`);
-        gsap.to(stepperRef.current, {
-          duration: 2,
-          scrollTo: `#Stop${nearestStop.StopID}`,
-        });
-      }
+    if (InitStop?.StopID) {
+      console.log("=== scrollTo ===", `Stop${InitStop.StopID}`);
+      gsap.to(stepperRef.current, {
+        duration: 2,
+        scrollTo: `#Stop${InitStop.StopID}`,
+      });
     }
-  }, [stops]);
+  }, [InitStop]);
 
   return (
     <BusDetailRealTimeStatusContainer>

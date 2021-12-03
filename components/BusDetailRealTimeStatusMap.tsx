@@ -12,7 +12,7 @@ import CardContent, { cardContentClasses } from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
-import Stack from "@mui/material/Stack";
+import Chip, { chipClasses } from "@mui/material/Chip";
 import List from "@mui/material/List";
 import Switch from "@mui/material/Switch";
 import FormControlLabel, {
@@ -25,6 +25,7 @@ import {
   Polyline,
   useJsApiLoader,
   useGoogleMap,
+  OverlayView,
 } from "@react-google-maps/api";
 
 import {
@@ -35,24 +36,10 @@ import { IconDefinition } from "@fortawesome/fontawesome-common-types";
 import { faBus } from "@fortawesome/free-solid-svg-icons/faBus";
 import { faCircle } from "@fortawesome/free-solid-svg-icons/faCircle";
 import { faCircle as farCircle } from "@fortawesome/free-regular-svg-icons/faCircle";
+import { faHeart as farHeart } from "@fortawesome/free-regular-svg-icons/faHeart";
 
-import {
-  parsePointType,
-  parseBusRouteData,
-  testBus,
-  testRoute,
-} from "services/bus";
+import { parsePointType, parseBusRouteData } from "services/bus";
 import { StopType, BusA1DataType, BusN1EstimateTimeDataType } from "types/bus";
-
-const lat = testBus[0].BusPosition.PositionLat;
-const lng = testBus[0].BusPosition.PositionLon;
-
-const position = {
-  lat,
-  lng,
-};
-
-const route = parseBusRouteData(testRoute.Geometry);
 
 const options = {
   strokeColor: "#5CBCDB",
@@ -67,13 +54,11 @@ const options = {
 };
 
 type Props = {
-  buses?: Array<BusA1DataType>;
   stops?: Array<StopType>;
+  buses?: Array<BusA1DataType>;
   routeShape?: Array<google.maps.LatLngLiteral>;
   InitStop?: BusN1EstimateTimeDataType;
   ZoomInStop?: BusN1EstimateTimeDataType;
-  zoom: number;
-  Direction: number;
 };
 
 const BusDetailRealTimeStatusMap: React.FC<Props> = ({
@@ -82,7 +67,6 @@ const BusDetailRealTimeStatusMap: React.FC<Props> = ({
   routeShape,
   InitStop,
   ZoomInStop,
-  Direction = 0,
 }) => {
   const router = useRouter();
   const [MapCenter, setMapCenter] = useState<google.maps.LatLngLiteral>({
@@ -93,53 +77,46 @@ const BusDetailRealTimeStatusMap: React.FC<Props> = ({
     id: "google-map-script",
     googleMapsApiKey: process.env.GOOGLE_MAP_API_KEY,
   });
-  const [Zoom, setZoom] = useState(14);
+  const [MapZoom, setMapZoom] = useState(15);
+  const [TriggerZoom, setTriggerZoom] = useState(false);
+  const [TriggerZoomUpdate, setTriggerZoomUpdate] = useState(false);
+  const [ShowStops, setShowStops] = useState(false);
 
-  const PrevDirection = usePrevious(Direction);
   useEffect(() => {
-    if (isLoaded && InitStop && Direction !== PrevDirection) {
+    if (isLoaded && InitStop) {
       const stop = stops.find((s) => s.StopID === InitStop.StopID);
       if (stop) {
         setMapCenter(parsePointType(stop.StopPosition));
-        setZoom(14);
+        setMapZoom(15);
+        setTriggerZoom(!TriggerZoom);
       }
     }
-  }, [isLoaded, InitStop, Direction]);
+  }, [isLoaded, InitStop]);
 
   useEffect(() => {
     if (isLoaded && ZoomInStop) {
       const stop = stops.find((s) => s.StopID === ZoomInStop.StopID);
       if (stop) {
         setMapCenter(parsePointType(stop.StopPosition));
-        setZoom(17);
+        setMapZoom(17);
+        setTriggerZoom(!TriggerZoom);
       }
     }
   }, [ZoomInStop]);
-
-  const [ShowStops, setShowStops] = useState(false);
 
   const onLoad = React.useCallback(function callback(map) {}, []);
 
   const onUnmount = React.useCallback(function callback(map) {}, []);
 
-  const stopLocations = React.useMemo(
-    () =>
-      stops
-        ? stops.map((s) => ({
-            lat: s.StopPosition.PositionLat,
-            lng: s.StopPosition.PositionLon,
-          }))
-        : [],
-    [stops]
-  );
-
   return isLoaded ? (
     <GoogleMap
       mapContainerStyle={containerStyle}
-      // center={MapCenter}
-      zoom={Zoom}
       onLoad={onLoad}
       onUnmount={onUnmount}
+      onZoomChanged={() => {
+        console.log("=== onZoomChanged ===");
+        setTriggerZoomUpdate(!TriggerZoomUpdate);
+      }}
       options={{
         mapTypeControl: false,
         zoomControl: false,
@@ -152,6 +129,11 @@ const BusDetailRealTimeStatusMap: React.FC<Props> = ({
       }}
     >
       <PanningComponent MapCenter={MapCenter} />
+      <ZoomComponent
+        MapZoom={MapZoom}
+        TriggerZoom={TriggerZoom}
+        setMapZoom={(zoom) => setMapZoom(zoom)}
+      />
       <SwitchCard>
         <SwitchCardContent>
           <SwitchLabel
@@ -193,46 +175,11 @@ const BusDetailRealTimeStatusMap: React.FC<Props> = ({
 
       {routeShape && <Polyline path={routeShape} options={options} />}
 
-      <FontAwesomeMarker
-        position={stopLocations[0]}
-        icon={faCircle}
-        color="#5CBCDB"
-        size={7}
+      <RenderStopMarkers
+        stops={stops}
+        ShowStops={ShowStops}
+        TriggerZoomUpdate={TriggerZoomUpdate}
       />
-
-      <FontAwesomeMarker
-        position={stopLocations[0]}
-        icon={farCircle}
-        color="#5CBCDB"
-        size={20}
-      />
-
-      <FontAwesomeMarker
-        position={stopLocations[stopLocations.length - 1]}
-        icon={faCircle}
-        color="#5CBCDB"
-        size={7}
-      />
-
-      <FontAwesomeMarker
-        position={stopLocations[stopLocations.length - 1]}
-        icon={farCircle}
-        color="#5CBCDB"
-        size={20}
-      />
-
-      {ShowStops &&
-        stopLocations
-          .slice(1, -1)
-          .map((s, i) => (
-            <FontAwesomeMarker
-              key={i}
-              position={s}
-              icon={faCircle}
-              color="#4C546A"
-              size={8}
-            />
-          ))}
     </GoogleMap>
   ) : (
     <></>
@@ -260,11 +207,10 @@ const FontAwesomeMarker: React.FC<{
   />
 );
 
-const PanningComponent: React.FC<{ MapCenter: google.maps.LatLngLiteral }> = ({
-  MapCenter,
-}) => {
+const PanningComponent: React.FC<{
+  MapCenter: google.maps.LatLngLiteral;
+}> = ({ MapCenter }) => {
   const map = useGoogleMap();
-
   React.useEffect(() => {
     if (map && MapCenter) {
       console.log("map pan to", MapCenter);
@@ -273,6 +219,93 @@ const PanningComponent: React.FC<{ MapCenter: google.maps.LatLngLiteral }> = ({
   }, [map, MapCenter]);
 
   return null;
+};
+
+const ZoomComponent: React.FC<{
+  MapZoom: number;
+  TriggerZoom: boolean;
+  setMapZoom: (zoom: number) => void;
+}> = ({ MapZoom = 15, TriggerZoom, setMapZoom }) => {
+  const map = useGoogleMap();
+
+  React.useEffect(() => {
+    if (map) {
+      console.log("map zoom to", MapZoom);
+      map.setZoom(MapZoom);
+    }
+  }, [map, MapZoom, TriggerZoom]);
+
+  return null;
+};
+
+const ZoomThreshold = 16;
+const RenderStopMarkers: React.FC<{
+  stops: Array<StopType>;
+  ShowStops: boolean;
+  TriggerZoomUpdate: boolean;
+}> = ({ stops, ShowStops, TriggerZoomUpdate }) => {
+  const [Zoom, setZoom] = useState(14);
+  const map = useGoogleMap();
+
+  useEffect(() => {
+    console.log("===Zoom===", Zoom);
+    if (map) {
+      setZoom(map.getZoom());
+    }
+  }, [TriggerZoomUpdate]);
+  return (
+    <>
+      {stops.map((s, i) => (
+        <>
+          {[0, stops.length - 1].includes(i) ? (
+            <>
+              <FontAwesomeMarker
+                position={parsePointType(s.StopPosition)}
+                icon={faCircle}
+                color="#5CBCDB"
+                size={Zoom > ZoomThreshold ? 21 : 7}
+              />
+              <FontAwesomeMarker
+                position={parsePointType(s.StopPosition)}
+                icon={farCircle}
+                color="#5CBCDB"
+                size={Zoom > ZoomThreshold ? 60 : 20}
+              />
+            </>
+          ) : (
+            ShowStops && (
+              <FontAwesomeMarker
+                key={i}
+                position={parsePointType(s.StopPosition)}
+                icon={faCircle}
+                color="#4C546A"
+                size={Zoom > ZoomThreshold ? 50 : 13}
+              />
+            )
+          )}
+          {Zoom > ZoomThreshold && (
+            <OverlayView
+              position={parsePointType(s.StopPosition)}
+              mapPaneName={OverlayView.FLOAT_PANE}
+            >
+              <StopChip
+                icon={
+                  <FontAwesomeIcon
+                    icon={farHeart}
+                    width={25}
+                    onClick={() => {
+                      console.log("like");
+                    }}
+                  />
+                }
+                label={s.StopName.Zh_tw}
+              />
+            </OverlayView>
+          )}
+        </>
+      ))}
+    </>
+  );
 };
 
 const containerStyle = {
@@ -298,6 +331,31 @@ const SwitchCardContent = muiStyled(CardContent)(({ theme }) => ({
   padding: 8,
   [`&.${cardContentClasses.root}:last-child`]: {
     paddingBottom: 8,
+  },
+}));
+const StopChip = muiStyled(Chip)(({ theme }) => ({
+  position: "absolute",
+  left: 24,
+  height: 46,
+  color: theme.palette.common.white,
+  backgroundColor: "#EDBE62",
+  paddingRight: 75,
+  paddingLeft: 30,
+  paddingTop: 10,
+  paddingBottom: 10,
+  [`& .${chipClasses.icon}`]: {
+    color: theme.palette.common.white,
+    position: "absolute",
+    right: 25,
+    width: 25,
+    height: 22,
+    cursor: "pointer",
+  },
+  [`& .${chipClasses.label}`]: {
+    fontSize: 18,
+    lineHeight: 26 / 18,
+    paddingRight: 0,
+    paddingLeft: 0,
   },
 }));
 

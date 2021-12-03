@@ -1,6 +1,6 @@
 import type { NextPage } from "next";
 import type { ReactElement } from "react";
-import React from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import styled from "styled-components";
 import Image from "next/image";
 import { CityOptions } from "types/bus";
@@ -68,11 +68,10 @@ const BusStatusDetail = () => {
   const { city, route } = router.query;
   const theme = useTheme();
   const onMobile = useMediaQuery(theme.breakpoints.down("sm"));
-  const [Direction, setDirection] = React.useState(0);
-  const PrevDirection = usePrevious(Direction);
-  const [InitStop, setInitStop] = React.useState<BusN1EstimateTimeDataType>();
-  const [ZoomInStop, setZoomInStop] =
-    React.useState<BusN1EstimateTimeDataType>();
+  const [Direction, setDirection] = useState(0);
+  const [InitStop, setInitStop] = useState<BusN1EstimateTimeDataType>();
+  const [InitStopUpdated, setInitStopUpdated] = useState(false);
+  const [ZoomInStop, setZoomInStop] = useState<BusN1EstimateTimeDataType>();
 
   const {
     stops,
@@ -80,7 +79,7 @@ const BusStatusDetail = () => {
     isError: isStopsError,
   } = useGetBusRouteStops(city, route);
 
-  const Stops = React.useMemo(
+  const Stops = useMemo(
     () =>
       stops && !isStopsLoading && !isStopsError
         ? stops.find((r) => r.Direction === Direction).Stops
@@ -94,7 +93,7 @@ const BusStatusDetail = () => {
     isError: isEstimateError,
   } = useGetBusRouteEstimatedTimeOfArrival(city, route);
 
-  const EstimatedTimeOfArrival = React.useMemo(
+  const EstimatedTimeOfArrival = useMemo(
     () =>
       estimatedTimeOfArrival && !isEstimateLoading && !isEstimateError
         ? estimatedTimeOfArrival.filter((r) => r.Direction === Direction)
@@ -102,15 +101,20 @@ const BusStatusDetail = () => {
     [estimatedTimeOfArrival, Direction]
   );
 
-  React.useEffect(() => {
+  useEffect(() => {
     const nearestStop: BusN1EstimateTimeDataType = findNearestStop(
       EstimatedTimeOfArrival
     );
 
-    if (nearestStop) {
+    if (nearestStop && !InitStopUpdated) {
       setInitStop(nearestStop);
+      setInitStopUpdated(true);
     }
-  }, [EstimatedTimeOfArrival]);
+  }, [EstimatedTimeOfArrival, InitStopUpdated]);
+
+  useEffect(() => {
+    setInitStopUpdated(false);
+  }, [Direction]);
 
   const {
     routeShapes,
@@ -118,7 +122,7 @@ const BusStatusDetail = () => {
     isError: isShapeError,
   } = useGetBusRouteShape(city, route);
 
-  const Shapes = React.useMemo(
+  const Shapes = useMemo(
     () =>
       routeShapes && !isShapeLoading && !isShapeError && routeShapes.length
         ? parseBusRouteData(routeShapes[0].Geometry)
@@ -132,7 +136,7 @@ const BusStatusDetail = () => {
     isError: isRoutesError,
   } = useGetBusRouteInfo(city, route);
 
-  const RoutInfo = React.useMemo(
+  const RoutInfo = useMemo(
     () => (routes && !isRoutesLoading && !isRoutesError ? routes[0] : null),
     [routes]
   );
@@ -143,7 +147,7 @@ const BusStatusDetail = () => {
     isError: isScheduleError,
   } = useGetBusRouteSchedule(city, route);
 
-  const Schedules = React.useMemo(
+  const Schedules = useMemo(
     () =>
       schedules && !isScheduleLoading && !isScheduleError && schedules.length
         ? {
@@ -163,7 +167,7 @@ const BusStatusDetail = () => {
     isError: isBusError,
   } = useGetBusRouteBusRealTimeByFrequency(city, route);
 
-  const Buses = React.useMemo(
+  const Buses = useMemo(
     () =>
       buses && !isBusLoading && !isBusError
         ? buses.filter((r) => r.Direction === Direction)
@@ -218,6 +222,7 @@ const BusStatusDetail = () => {
       >
         <BusDetailRealTimeStatus
           stops={EstimatedTimeOfArrival}
+          InitStop={InitStop}
           Direction={Direction}
           setDirection={setDirection}
           setZoomInStop={(stop: BusN1EstimateTimeDataType) =>
