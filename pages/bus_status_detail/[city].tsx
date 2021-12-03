@@ -70,6 +70,8 @@ const BusStatusDetail = () => {
   const onMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const [Direction, setDirection] = useState(0);
   const [InitStop, setInitStop] = useState<BusN1EstimateTimeDataType>();
+  const [StopsNearlyArrived, setStopsNearlyArrived] =
+    useState<Array<BusN1EstimateTimeDataType["StopID"]>>();
   const [InitStopUpdated, setInitStopUpdated] = useState(false);
   const [ZoomInStop, setZoomInStop] = useState<BusN1EstimateTimeDataType>();
 
@@ -111,6 +113,15 @@ const BusStatusDetail = () => {
       setInitStopUpdated(true);
     }
   }, [EstimatedTimeOfArrival, InitStopUpdated]);
+
+  useEffect(() => {
+    const nearStops: Array<BusN1EstimateTimeDataType["StopID"]> =
+      EstimatedTimeOfArrival.filter(
+        (s) => s.StopStatus === 0 && Math.floor(s.EstimateTime / 60) === 0
+      ).map((s) => s.StopID);
+
+    setStopsNearlyArrived(nearStops);
+  }, [EstimatedTimeOfArrival]);
 
   useEffect(() => {
     setInitStopUpdated(false);
@@ -235,7 +246,7 @@ const BusStatusDetail = () => {
           buses={Buses}
           InitStop={InitStop}
           ZoomInStop={ZoomInStop}
-          Direction={Direction}
+          StopsNearlyArrived={StopsNearlyArrived}
         />
       </BusStatusDetailContainer>
     </>

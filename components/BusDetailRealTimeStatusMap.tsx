@@ -59,6 +59,7 @@ type Props = {
   routeShape?: Array<google.maps.LatLngLiteral>;
   InitStop?: BusN1EstimateTimeDataType;
   ZoomInStop?: BusN1EstimateTimeDataType;
+  StopsNearlyArrived?: Array<BusN1EstimateTimeDataType["StopID"]>;
 };
 
 const BusDetailRealTimeStatusMap: React.FC<Props> = ({
@@ -67,6 +68,7 @@ const BusDetailRealTimeStatusMap: React.FC<Props> = ({
   routeShape,
   InitStop,
   ZoomInStop,
+  StopsNearlyArrived,
 }) => {
   const router = useRouter();
   const [MapCenter, setMapCenter] = useState<google.maps.LatLngLiteral>({
@@ -179,6 +181,7 @@ const BusDetailRealTimeStatusMap: React.FC<Props> = ({
         stops={stops}
         ShowStops={ShowStops}
         TriggerZoomUpdate={TriggerZoomUpdate}
+        StopsNearlyArrived={StopsNearlyArrived}
       />
     </GoogleMap>
   ) : (
@@ -243,7 +246,8 @@ const RenderStopMarkers: React.FC<{
   stops: Array<StopType>;
   ShowStops: boolean;
   TriggerZoomUpdate: boolean;
-}> = ({ stops, ShowStops, TriggerZoomUpdate }) => {
+  StopsNearlyArrived?: Array<BusN1EstimateTimeDataType["StopID"]>;
+}> = ({ stops, ShowStops, TriggerZoomUpdate, StopsNearlyArrived }) => {
   const [Zoom, setZoom] = useState(14);
   const map = useGoogleMap();
 
@@ -274,16 +278,29 @@ const RenderStopMarkers: React.FC<{
             </>
           ) : (
             ShowStops && (
-              <FontAwesomeMarker
-                key={i}
-                position={parsePointType(s.StopPosition)}
-                icon={faCircle}
-                color="#4C546A"
-                size={Zoom > ZoomThreshold ? 50 : 13}
-              />
+              <>
+                <FontAwesomeMarker
+                  key={i}
+                  position={parsePointType(s.StopPosition)}
+                  icon={faCircle}
+                  color="#4C546A"
+                  size={Zoom > ZoomThreshold ? 50 : 13}
+                />
+                {Zoom > ZoomThreshold &&
+                  StopsNearlyArrived?.length &&
+                  StopsNearlyArrived.indexOf(s.StopID) && (
+                    <FontAwesomeMarker
+                      key={i}
+                      position={parsePointType(s.StopPosition)}
+                      icon={faCircle}
+                      color="#EDBE62"
+                      size={40}
+                    />
+                  )}
+              </>
             )
           )}
-          {Zoom > ZoomThreshold && (
+          {Zoom > ZoomThreshold && ShowStops && (
             <OverlayView
               position={parsePointType(s.StopPosition)}
               mapPaneName={OverlayView.FLOAT_PANE}
