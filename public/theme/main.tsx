@@ -51,6 +51,42 @@ export const mainTheme = createTheme({
   },
 
   components: {
+    MuiCssBaseline: {
+      styleOverrides: {
+        body: {
+          // scrollbarColor: `${colorSet.primary} transparent`,
+          "&::-webkit-scrollbar, & *::-webkit-scrollbar": {
+            width: "0.4em",
+            // backgroundColor: "#2b2b2b",
+          },
+          "&::-webkit-scrollbar-thumb, & *::-webkit-scrollbar-thumb": {
+            borderRadius: 8,
+            backgroundColor: colorSet.primary,
+            minHeight: 40,
+            // border: "3px solid #2b2b2b",
+          },
+
+          "&::-webkit-scrollbar-thumb:focus, & *::-webkit-scrollbar-thumb:focus":
+            {
+              // backgroundColor: "#959595",
+            },
+          "&::-webkit-scrollbar-thumb:active, & *::-webkit-scrollbar-thumb:active":
+            {
+              // backgroundColor: "#959595",
+            },
+          "&::-webkit-scrollbar-thumb:hover, & *::-webkit-scrollbar-thumb:hover":
+            {
+              // backgroundColor: "#959595",
+            },
+          "&::-webkit-scrollbar-corner, & *::-webkit-scrollbar-corner": {
+            // backgroundColor: "#2b2b2b",
+          },
+          "&::-webkit-scrollbar-track": {
+            "-webkit-box-shadow": "inset 0 0 6px rgba(0,0,0,0.00)",
+          },
+        },
+      },
+    },
     MuiButton: {
       styleOverrides: {
         containedPrimary: {

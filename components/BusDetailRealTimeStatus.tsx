@@ -162,16 +162,6 @@ const BusDetailRealTimeStatusContainer = muiStyled(Stack)(({ theme }) => ({
 const BusDetailRealTimeStatusBody = muiStyled(Grid)(({ theme }) => ({
   width: "100%",
   overflow: "auto",
-  "&::-webkit-scrollbar": {
-    width: "0.4em",
-  },
-  "&::-webkit-scrollbar-track": {
-    "-webkit-box-shadow": "inset 0 0 6px rgba(0,0,0,0.00)",
-  },
-  "&::-webkit-scrollbar-thumb": {
-    backgroundColor: theme.palette.primary.main,
-    borderRadius: 1000,
-  },
 }));
 
 const BusStopStepLabel = muiStyled(StepLabel)(({ theme }) => ({
