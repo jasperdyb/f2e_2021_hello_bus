@@ -6700,7 +6700,7 @@ export function useGetBusRouteEstimatedTimeOfArrival(
     }
   );
 
-  // console.log("==== useGetBusRouteEstimatedTimeOfArrival data ===", data);
+  console.log("==== useGetBusRouteEstimatedTimeOfArrival data ===", data);
   // console.log("==== useGetBusRouteEstimatedTimeOfArrival error ===", error);
   return {
     estimatedTimeOfArrival: data,

@@ -46,6 +46,7 @@ import {
 
 import {
   PointType,
+  StopType,
   BusIndexDataType,
   BusStopsDataType,
   BusRouteDataType,
@@ -73,7 +74,7 @@ const BusStatusDetail = () => {
   const [StopsNearlyArrived, setStopsNearlyArrived] =
     useState<Array<BusN1EstimateTimeDataType["StopID"]>>();
   const [InitStopUpdated, setInitStopUpdated] = useState(false);
-  const [ZoomInStop, setZoomInStop] = useState<BusN1EstimateTimeDataType>();
+  const [ZoomInStop, setZoomInStop] = useState<StopType>();
 
   const {
     stops,
@@ -232,16 +233,17 @@ const BusStatusDetail = () => {
         spacing={3}
       >
         <BusDetailRealTimeStatus
-          stops={EstimatedTimeOfArrival}
+          stops={Stops}
+          stopEstimateTimes={EstimatedTimeOfArrival}
+          Buses={Buses}
           InitStop={InitStop}
           Direction={Direction}
           setDirection={setDirection}
-          setZoomInStop={(stop: BusN1EstimateTimeDataType) =>
-            setZoomInStop(stop)
-          }
+          setZoomInStop={(stop: StopType) => setZoomInStop(stop)}
         />
         <BusDetailRealTimeStatusMap
           stops={Stops}
+          stopEstimateTimes={EstimatedTimeOfArrival}
           routeShape={Shapes}
           buses={Buses}
           InitStop={InitStop}

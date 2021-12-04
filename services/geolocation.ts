@@ -59,3 +59,13 @@ export const getGeocodingReverse = async (location: Location) => {
     return null;
   }
 };
+
+export const getDistanceBetween = async (
+  fromLatlng: google.maps.LatLng,
+  toLatlng: google.maps.LatLng
+) => {
+  return window.google.maps.geometry.spherical.computeDistanceBetween(
+    fromLatlng,
+    toLatlng
+  );
+};
