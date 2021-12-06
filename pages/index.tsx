@@ -55,5 +55,6 @@ Home.getLayout = function getLayout(page: ReactElement) {
 const FullScreenContainer = styled("div")`
   height: 100vh;
   width: 100vw;
+  /* padding-bottom: 50px; */
 `;
 export default Home;

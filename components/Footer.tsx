@@ -19,7 +19,7 @@ const Footer: React.FC<Props> = ({ color, children }) => {
   const theme = useTheme();
   const onMobile = useMediaQuery(theme.breakpoints.down("sm"));
   return (
-    <FooterAppBar color={color} position="fixed">
+    <FooterAppBar color={color}>
       <FooterContentStack>{children}</FooterContentStack>
     </FooterAppBar>
   );

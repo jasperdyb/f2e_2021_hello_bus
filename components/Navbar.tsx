@@ -38,11 +38,13 @@ export const menu = [
 
 interface Props extends AppBarProps {
   icon?: ImageProps["src"];
+
   navTextColor?: string;
 }
 
 const Navbar: React.FC<Props> = ({
   color,
+  position = "fixed",
   icon = HelloBus_light,
   navTextColor,
 }) => {
@@ -52,7 +54,7 @@ const Navbar: React.FC<Props> = ({
   const [menuOpen, setMenuOpen] = React.useState(false);
 
   return (
-    <CustomAppBar color={color} position={"fixed"}>
+    <CustomAppBar color={color} position={position}>
       <Stack direction={"row"} justifyContent={"space-between"}>
         {onMobile && (
           <>

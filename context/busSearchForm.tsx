@@ -11,7 +11,7 @@ type BusSearchFormType = {
 export const BusSearchFormContextProvider: React.FC = (props) => {
   const methods = useForm<BusSearchFormType>({
     defaultValues: {
-      city: CityOptions[0].searchString,
+      city: "",
       keyword: "",
     },
   });
