@@ -1,4 +1,5 @@
 import React, { useState, useEffect, createElement, useMemo } from "react";
+import Image from "next/image";
 
 import styled from "styled-components";
 import { styled as muiStyled } from "@mui/material/styles";

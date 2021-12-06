@@ -43,9 +43,8 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   gsap.registerPlugin(ScrollToPlugin);
   return (
     <>
-      <CssBaseline />
-      <GlobalStyle />
       <ThemeProvider theme={mainTheme}>
+        <CssBaseline />
         <GeolocationContextProvider>
           <SceneSpotContextProvider>
             {getLayout(<Component {...pageProps} />)}

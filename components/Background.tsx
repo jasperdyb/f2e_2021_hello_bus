@@ -47,15 +47,19 @@ const Background: React.FC<Props> = ({ image, logo, children }) => {
             </Grid>
           )}
         </LogoContainer>
-
-        {children}
+        <BackgroundImageOtherChildrenContainer>
+          {children}
+        </BackgroundImageOtherChildrenContainer>
       </BackgroundImageChildrenContainer>
     </BackgroundContainer>
   );
 };
-const BackgroundContainer = styled("div")`
-  overflow: hidden;
-`;
+
+const BackgroundContainer = muiStyled("div")(({ theme }) => ({
+  overflow: "hidden",
+
+  height: "100%",
+}));
 
 const BackgroundImageContainer = styled("div")`
   position: fixed;
@@ -66,31 +70,31 @@ const BackgroundImageContainer = styled("div")`
 
 const LogoContainer = muiStyled(Grid)(({ theme }) => ({
   minHeight: 100,
-  marginTop: 222,
-  marginBottom: 235,
   zIndex: 0,
+  flexGrow: 2,
 }));
 
 const BackgroundImage = muiStyled(Image)(({ theme }) => ({}));
 
 const BackgroundImageEclipseContainer = muiStyled("div")(({ theme }) => ({
-  width: "200%",
-  height: "700%",
-  marginLeft: "-50%",
-  marginTop: -1241,
+  width: "200vw",
+  height: "700vh",
+  // marginLeft: "-50%",
+  // marginTop: "-90%",
   overflow: "hidden",
   position: "relative",
   justifyContent: "center",
   alignContent: "center",
 
-  // left: "-50vw",
+  left: "-50vw",
+  top: "-125vh",
   zIndex: 0,
 }));
 
 const BackgroundImageEclipse = muiStyled("div")(({ theme }) => ({
   content: '""',
-  width: 1945,
-  height: 1945,
+  width: "120vw",
+  height: "200vh",
   margin: "auto",
 
   borderRadius: "50%",
@@ -107,9 +111,17 @@ const Slogan = muiStyled(Typography)(({ theme }) => ({
   },
 }));
 
-const BackgroundImageChildrenContainer = styled("div")`
-  position: relative;
-  z-index: 0;
-`;
+const BackgroundImageChildrenContainer = muiStyled("div")(({ theme }) => ({
+  position: "relative",
+  zIndex: 0,
+  height: "100%",
+  display: "flex",
+  flexDirection: "column",
+  justifyContent: "space-around",
+}));
+
+const BackgroundImageOtherChildrenContainer = muiStyled("div")(({ theme }) => ({
+  flexGrow: 1,
+}));
 
 export default Background;

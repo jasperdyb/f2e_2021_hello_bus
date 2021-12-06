@@ -6521,8 +6521,8 @@ export function useGetBusRouteIndex(
 }
 
 export function useGetBusRouteStops(
-  City: string,
-  RouteName: string
+  City: string | string[],
+  RouteName: string | string[]
 ): {
   stops: Array<BusStopsDataType>;
   isLoading: boolean;
@@ -6558,8 +6558,8 @@ export function useGetBusRouteStops(
 }
 
 export function useGetBusRouteInfo(
-  City: string,
-  RouteName: string
+  City: string | string[],
+  RouteName: string | string[]
 ): {
   routes: Array<BusRouteDataType>;
   isLoading: boolean;
@@ -6595,8 +6595,8 @@ export function useGetBusRouteInfo(
 }
 
 export function useGetBusRouteShape(
-  City: string,
-  RouteName: string
+  City: string | string[],
+  RouteName: string | string[]
 ): {
   routeShapes: Array<BusShapeDataType>;
   isLoading: boolean;
@@ -6632,8 +6632,8 @@ export function useGetBusRouteShape(
 }
 
 export function useGetBusRouteSchedule(
-  City: string,
-  RouteName: string
+  City: string | string[],
+  RouteName: string | string[]
 ): {
   schedules: Array<BusScheduleDataType>;
   isLoading: boolean;
@@ -6670,8 +6670,8 @@ export function useGetBusRouteSchedule(
 }
 
 export function useGetBusRouteEstimatedTimeOfArrival(
-  City: string,
-  RouteName: string
+  City: string | string[],
+  RouteName: string | string[]
 ): {
   estimatedTimeOfArrival: Array<BusN1EstimateTimeDataType>;
   isLoading: boolean;
@@ -6700,7 +6700,7 @@ export function useGetBusRouteEstimatedTimeOfArrival(
     }
   );
 
-  // console.log("==== useGetBusRouteEstimatedTimeOfArrival data ===", data);
+  console.log("==== useGetBusRouteEstimatedTimeOfArrival data ===", data);
   // console.log("==== useGetBusRouteEstimatedTimeOfArrival error ===", error);
   return {
     estimatedTimeOfArrival: data,
@@ -6710,8 +6710,8 @@ export function useGetBusRouteEstimatedTimeOfArrival(
 }
 
 export function useGetBusRouteBusRealTimeByFrequency(
-  City: string,
-  RouteName: string
+  City: string | string[],
+  RouteName: string | string[]
 ): {
   buses: Array<BusA1DataType>;
   isLoading: boolean;

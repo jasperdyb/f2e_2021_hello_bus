@@ -55,15 +55,17 @@ const options = {
 
 type Props = {
   stops?: Array<StopType>;
+  stopEstimateTimes?: Array<BusN1EstimateTimeDataType>;
   buses?: Array<BusA1DataType>;
   routeShape?: Array<google.maps.LatLngLiteral>;
   InitStop?: BusN1EstimateTimeDataType;
-  ZoomInStop?: BusN1EstimateTimeDataType;
+  ZoomInStop?: StopType;
   StopsNearlyArrived?: Array<BusN1EstimateTimeDataType["StopID"]>;
 };
 
 const BusDetailRealTimeStatusMap: React.FC<Props> = ({
   stops,
+  stopEstimateTimes,
   buses,
   routeShape,
   InitStop,
@@ -80,12 +82,13 @@ const BusDetailRealTimeStatusMap: React.FC<Props> = ({
     googleMapsApiKey: process.env.GOOGLE_MAP_API_KEY,
   });
   const [MapZoom, setMapZoom] = useState(15);
+  const [MapLoaded, setMapLoaded] = useState(false);
   const [TriggerZoom, setTriggerZoom] = useState(false);
   const [TriggerZoomUpdate, setTriggerZoomUpdate] = useState(false);
   const [ShowStops, setShowStops] = useState(false);
 
   useEffect(() => {
-    if (isLoaded && InitStop) {
+    if (MapLoaded && InitStop) {
       const stop = stops.find((s) => s.StopID === InitStop.StopID);
       if (stop) {
         setMapCenter(parsePointType(stop.StopPosition));
@@ -93,20 +96,23 @@ const BusDetailRealTimeStatusMap: React.FC<Props> = ({
         setTriggerZoom(!TriggerZoom);
       }
     }
-  }, [isLoaded, InitStop]);
+  }, [MapLoaded, InitStop]);
 
   useEffect(() => {
-    if (isLoaded && ZoomInStop) {
+    if (MapLoaded && ZoomInStop) {
       const stop = stops.find((s) => s.StopID === ZoomInStop.StopID);
       if (stop) {
         setMapCenter(parsePointType(stop.StopPosition));
         setMapZoom(17);
+        setShowStops(true);
         setTriggerZoom(!TriggerZoom);
       }
     }
   }, [ZoomInStop]);
 
-  const onLoad = React.useCallback(function callback(map) {}, []);
+  const onLoad = React.useCallback(function callback(map) {
+    setMapLoaded(true);
+  }, []);
 
   const onUnmount = React.useCallback(function callback(map) {}, []);
 
@@ -128,6 +134,8 @@ const BusDetailRealTimeStatusMap: React.FC<Props> = ({
         fullscreenControl: false,
         // gestureHandling: "none",
         keyboardShortcuts: false,
+        disableDefaultUI: true,
+        clickableIcons: false,
       }}
     >
       <PanningComponent MapCenter={MapCenter} />
@@ -139,7 +147,7 @@ const BusDetailRealTimeStatusMap: React.FC<Props> = ({
       <SwitchCard>
         <SwitchCardContent>
           <SwitchLabel
-            value={ShowStops}
+            checked={ShowStops}
             control={
               <Switch
                 onChange={(_, checked) => {
@@ -179,6 +187,7 @@ const BusDetailRealTimeStatusMap: React.FC<Props> = ({
 
       <RenderStopMarkers
         stops={stops}
+        stopEstimateTimes={stopEstimateTimes}
         ShowStops={ShowStops}
         TriggerZoomUpdate={TriggerZoomUpdate}
         StopsNearlyArrived={StopsNearlyArrived}
@@ -244,10 +253,17 @@ const ZoomComponent: React.FC<{
 const ZoomThreshold = 16;
 const RenderStopMarkers: React.FC<{
   stops: Array<StopType>;
+  stopEstimateTimes: Array<BusN1EstimateTimeDataType>;
   ShowStops: boolean;
   TriggerZoomUpdate: boolean;
   StopsNearlyArrived?: Array<BusN1EstimateTimeDataType["StopID"]>;
-}> = ({ stops, ShowStops, TriggerZoomUpdate, StopsNearlyArrived }) => {
+}> = ({
+  stops,
+  stopEstimateTimes,
+  ShowStops,
+  TriggerZoomUpdate,
+  StopsNearlyArrived,
+}) => {
   const [Zoom, setZoom] = useState(14);
   const map = useGoogleMap();
 
@@ -259,36 +275,43 @@ const RenderStopMarkers: React.FC<{
   }, [TriggerZoomUpdate]);
   return (
     <>
-      {stops.map((s, i) => (
-        <>
-          {[0, stops.length - 1].includes(i) ? (
-            <>
-              <FontAwesomeMarker
-                position={parsePointType(s.StopPosition)}
-                icon={faCircle}
-                color="#5CBCDB"
-                size={Zoom > ZoomThreshold ? 21 : 7}
-              />
-              <FontAwesomeMarker
-                position={parsePointType(s.StopPosition)}
-                icon={farCircle}
-                color="#5CBCDB"
-                size={Zoom > ZoomThreshold ? 60 : 20}
-              />
-            </>
-          ) : (
-            ShowStops && (
+      {stops.map((s, i) => {
+        const EstimateTimeStatus = stopEstimateTimes.find(
+          (se) => se.StopID === s.StopID
+        );
+        const EstimateTimeMinute = EstimateTimeStatus
+          ? Math.floor(EstimateTimeStatus.EstimateTime / 60)
+          : -1;
+        const nearStop = EstimateTimeMinute === 0;
+
+        return (
+          <>
+            {[0, stops.length - 1].includes(i) ? (
               <>
                 <FontAwesomeMarker
-                  key={i}
                   position={parsePointType(s.StopPosition)}
                   icon={faCircle}
-                  color="#4C546A"
-                  size={Zoom > ZoomThreshold ? 50 : 13}
+                  color="#5CBCDB"
+                  size={Zoom > ZoomThreshold ? 21 : 7}
                 />
-                {Zoom > ZoomThreshold &&
-                  StopsNearlyArrived?.length &&
-                  StopsNearlyArrived.indexOf(s.StopID) && (
+                <FontAwesomeMarker
+                  position={parsePointType(s.StopPosition)}
+                  icon={farCircle}
+                  color="#5CBCDB"
+                  size={Zoom > ZoomThreshold ? 60 : 20}
+                />
+              </>
+            ) : (
+              ShowStops && (
+                <>
+                  <FontAwesomeMarker
+                    key={i}
+                    position={parsePointType(s.StopPosition)}
+                    icon={faCircle}
+                    color="#4C546A"
+                    size={Zoom > ZoomThreshold ? 50 : 13}
+                  />
+                  {Zoom > ZoomThreshold && nearStop && (
                     <FontAwesomeMarker
                       key={i}
                       position={parsePointType(s.StopPosition)}
@@ -297,30 +320,31 @@ const RenderStopMarkers: React.FC<{
                       size={40}
                     />
                   )}
-              </>
-            )
-          )}
-          {Zoom > ZoomThreshold && ShowStops && (
-            <OverlayView
-              position={parsePointType(s.StopPosition)}
-              mapPaneName={OverlayView.FLOAT_PANE}
-            >
-              <StopChip
-                icon={
-                  <FontAwesomeIcon
-                    icon={farHeart}
-                    width={25}
-                    onClick={() => {
-                      console.log("like");
-                    }}
-                  />
-                }
-                label={s.StopName.Zh_tw}
-              />
-            </OverlayView>
-          )}
-        </>
-      ))}
+                </>
+              )
+            )}
+            {Zoom > ZoomThreshold && ShowStops && (
+              <OverlayView
+                position={parsePointType(s.StopPosition)}
+                mapPaneName={OverlayView.FLOAT_PANE}
+              >
+                <StopChip
+                  icon={
+                    <FontAwesomeIcon
+                      icon={farHeart}
+                      width={25}
+                      onClick={() => {
+                        console.log("like");
+                      }}
+                    />
+                  }
+                  label={s.StopName.Zh_tw}
+                />
+              </OverlayView>
+            )}
+          </>
+        );
+      })}
     </>
   );
 };

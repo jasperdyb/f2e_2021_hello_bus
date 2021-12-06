@@ -5,15 +5,14 @@ import { useRouter } from "next/router";
 import { styled as muiStyled } from "@mui/material/styles";
 import { useForm, useWatch, Controller, SubmitHandler } from "react-hook-form";
 
-import Box from "@mui/material/Box";
-import Card from "@mui/material/Card";
-import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
 import Stack from "@mui/material/Stack";
-import List from "@mui/material/List";
+import Chip, { chipClasses } from "@mui/material/Chip";
 
 import ButtonAnimatedBus from "components/ButtonAnimatedBus";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBus } from "@fortawesome/free-solid-svg-icons/faBus";
 import { faExchangeAlt } from "@fortawesome/free-solid-svg-icons/faExchangeAlt";
 
 import Stepper from "@mui/material/Stepper";
@@ -21,21 +20,31 @@ import Step from "@mui/material/Step";
 import StepLabel, { stepLabelClasses } from "@mui/material/StepLabel";
 import StepContent from "@mui/material/StepContent";
 
-import { testStops, testBusStop, findNearestStop } from "services/bus";
-import { BusN1EstimateTimeDataType, StopStatusEnum } from "types/bus";
+import { parsePointType } from "services/bus";
+import { getDistanceBetween } from "services/geolocation";
+import {
+  StopType,
+  BusN1EstimateTimeDataType,
+  BusA1DataType,
+  StopStatusEnum,
+} from "types/bus";
 
 import { gsap } from "gsap";
 
 type Props = {
-  stops?: Array<BusN1EstimateTimeDataType>;
+  stops?: Array<StopType>;
+  stopEstimateTimes?: Array<BusN1EstimateTimeDataType>;
+  Buses?: Array<BusA1DataType>;
   InitStop: BusN1EstimateTimeDataType;
   Direction: number;
   setDirection: (direction: number) => void;
-  setZoomInStop: (stop: BusN1EstimateTimeDataType) => void;
+  setZoomInStop: (stop: StopType) => void;
 };
 
 const BusDetailRealTimeStatus: React.FC<Props> = ({
   stops,
+  stopEstimateTimes,
+  Buses,
   InitStop,
   Direction,
   setDirection,
@@ -63,7 +72,7 @@ const BusDetailRealTimeStatus: React.FC<Props> = ({
               行駛方向
             </Typography>
             <Typography typography={"h2"}>
-              <ColorText>往</ColorText>
+              <ColorText>往</ColorText>{" "}
               {stops.length && stops[stops.length - 1].StopName.Zh_tw}
             </Typography>
           </Stack>
@@ -84,33 +93,51 @@ const BusDetailRealTimeStatus: React.FC<Props> = ({
       </BusDetailRealTimeStatusHeader>
       <BusDetailRealTimeStatusBody ref={stepperRef}>
         <Stepper orientation="vertical">
-          {stops.map((stop, index) => {
-            const EstimateTimeMinute = Math.floor(stop.EstimateTime / 60);
-            const nearStop = EstimateTimeMinute === 0;
+          {stops &&
+            stopEstimateTimes &&
+            stops.map((stop, index) => {
+              const EstimateTimeStatus = stopEstimateTimes.find(
+                (se) => se.StopID === stop.StopID
+              );
+              const EstimateTimeMinute = EstimateTimeStatus
+                ? Math.floor(EstimateTimeStatus.EstimateTime / 60)
+                : -1;
+              const nearStop = EstimateTimeMinute === 0;
 
-            return (
-              <Step id={`Stop${stop.StopID}`} key={index} active={nearStop}>
-                <BusStopStepLabel
-                  onClick={() => {
-                    setZoomInStop(stop);
-                  }}
-                >
-                  {stop.StopStatus !== 0 ? (
-                    StopStatusEnum[stop.StopStatus]
-                  ) : (
-                    <>
-                      {nearStop ? (
-                        <ColorText color="#F66A4B">即將進站</ColorText>
+              return (
+                <Step id={`Stop${stop.StopID}`} key={index} active={nearStop}>
+                  <BusStopStepLabel
+                    onClick={() => {
+                      setZoomInStop(stop);
+                    }}
+                  >
+                    <Typography>
+                      {EstimateTimeStatus &&
+                      EstimateTimeStatus.StopStatus !== 0 ? (
+                        StopStatusEnum[EstimateTimeStatus.StopStatus]
                       ) : (
-                        `${EstimateTimeMinute} 分`
-                      )}
-                    </>
-                  )}{" "}
-                  {stop.StopName.Zh_tw}
-                </BusStopStepLabel>
-              </Step>
-            );
-          })}
+                        <>
+                          {nearStop ? (
+                            <ColorText color="#F66A4B">即將進站 </ColorText>
+                          ) : (
+                            `${EstimateTimeMinute} 分`
+                          )}
+                        </>
+                      )}{" "}
+                      {stop.StopName.Zh_tw}
+                    </Typography>
+                    {EstimateTimeStatus?.PlateNumb && (
+                      <BusChip
+                        icon={<FontAwesomeIcon icon={faBus} width={16} />}
+                        label={EstimateTimeStatus.PlateNumb}
+                        color="secondary"
+                        variant="outlined"
+                      />
+                    )}
+                  </BusStopStepLabel>
+                </Step>
+              );
+            })}
         </Stepper>
       </BusDetailRealTimeStatusBody>
     </BusDetailRealTimeStatusContainer>
@@ -136,10 +163,20 @@ const BusDetailRealTimeStatusBody = muiStyled(Grid)(({ theme }) => ({
   width: "100%",
   overflow: "auto",
 }));
+
 const BusStopStepLabel = muiStyled(StepLabel)(({ theme }) => ({
   [`& .${stepLabelClasses.label}`]: {
     cursor: "pointer",
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingRight: 10,
   },
+}));
+
+const BusChip = muiStyled(Chip)(({ theme }) => ({
+  paddingLeft: 8,
+  [`& .${chipClasses.label}`]: {},
 }));
 
 export default BusDetailRealTimeStatus;
