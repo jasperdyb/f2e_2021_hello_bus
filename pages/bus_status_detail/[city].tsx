@@ -1,4 +1,5 @@
 import type { NextPage } from "next";
+import { withRouter, NextRouter } from "next/router";
 import type { ReactElement } from "react";
 import React, { useState, useEffect, useMemo } from "react";
 import styled from "styled-components";
@@ -55,14 +56,6 @@ import {
   BusN1EstimateTimeDataType,
   BusA1DataType,
 } from "types/bus";
-
-function usePrevious(value) {
-  const ref = React.useRef();
-  React.useEffect(() => {
-    ref.current = value;
-  }, [value]);
-  return ref.current;
-}
 
 const BusStatusDetail = () => {
   const router = useRouter();
